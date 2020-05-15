@@ -3,6 +3,8 @@
 
 #include "xoroshiro.hpp"
 
+const int output_instances = 20; // Amount of random numbers generated
+
 int main(void) {
     // Create the xoroshiro128+ Generator
     xoroshiro128plus_gen gen;
@@ -10,12 +12,15 @@ int main(void) {
     // Random device created
     std::random_device dev{};
 
-    // Using xoroshiro128+ generator seed
+    // Seed created
     gen.seed([&dev]() { return dev(); });
 
+    // Normalize the result to output just a bit - It is a bit random generator in this case
     std::uniform_real_distribution<> dist(0.0, 1.0);
 
-    for (int i = 0; i < 20; i++)
+    // Generate the random numbers
+    for (int i = 0; i < output_instances; i++)
+        // If it is desired to output the total number just leave "gen()" alone
         std::cout << dist(gen) << std::endl;
 }
 
