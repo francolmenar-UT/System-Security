@@ -2,16 +2,18 @@
 
 xoroshiro128plus_gen::result_type
 xoroshiro128plus_gen::operator()() {
-        // Copying "state" to operate with it
+    // Copying state to operate with it
     const uint64_t s0 = state[0];
     uint64_t s1 = state[1];
 
-    // Sum of the
+    // Sum of the states
     const uint64_t result = s0 + s1;
 
     s1 ^= s0;
-    state[0] = rotl(s0, 55) ^ s1 ^ (s1 << 14); // a, b
-    state[1] = rotl(s1, 36); // c
+
+    // Update the states
+    state[0] = rotl(s0, gen_a) ^ s1 ^ (s1 << gen_b);
+    state[1] = rotl(s1, gen_c);
 
     return result;
 }
