@@ -1,15 +1,6 @@
 #include <iostream>
 #include "config.hpp"
 
-void init(int** M, int val)
-{
-  for (int i = 0; i < 2; i++) {
-    for (int j = 0; j < N; j++) {
-      M[i][j] = val;
-    }
-  }
-}
-
 // Get the value of the i-th bit of C
 int get_C(int C, int i) {
   int mask = 1 << i;
@@ -20,11 +11,8 @@ int get_C(int C, int i) {
 int main(int argc, char const *argv[]) {
   // Delay matrix
   int** T = new int*[2];
-  T[0] = new int[N];
-  T[1] = new int[N];
-  init(T, 1);
-
-  T[0][1] = 10;
+  T[0] = new int[N] T0;
+  T[1] = new int[N] T1;
 
   std::cout << "Delay matrix T:" << std::endl;
   for (int i = 0; i < 2; i++) {
