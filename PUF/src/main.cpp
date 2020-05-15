@@ -1,7 +1,16 @@
-#include <iostream>
 #include <fstream>
 
 #include "config.hpp"
+
+#ifdef DEBUG
+#include <iostream>
+#endif
+
+#ifdef RANDOM_T
+#include <cstdlib>
+#include <ctime>
+#endif
+
 
 // Get the value of the i-th bit of C
 int get_C(int C, int i) {
@@ -30,7 +39,7 @@ int simulate(int** T, int**M, int challenge) {
   // Compute the final output as the fastest signal
   int output = M[0][N] < M[1][N] ? 0 : 1;
 
-  #ifdef DEBUG
+  #ifdef DEBUG2
   // Output the matrix
   std::cout << "Challenge bits:" << std::endl;
   for (int i = 0; i < N; i++) {
@@ -58,6 +67,13 @@ int main(int argc, char const *argv[]) {
   T[0] = new int[N] T0;
   T[1] = new int[N] T1;
 
+  #ifdef RANDOM_T
+  srand(time(NULL));
+  for (int i = 0; i<2; i++)
+    for (int j = 0; j < N; j++)
+      T[i][j] = rand() T_RAND_PARAM;
+  #endif
+
   #ifdef DEBUG
   std::cout << "Delay matrix T:" << std::endl;
   for (int i = 0; i < 2; i++) {
@@ -78,7 +94,7 @@ int main(int argc, char const *argv[]) {
   // This way it's easier to generate multiple values
   int challenge = 42;
 
-  std::ofstream out ("log.txt");
+  std::ofstream out (LOGFILE);
 
   // Run each simulation
   for (int s = 0; s < SIMULATIONS; s++) {
