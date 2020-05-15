@@ -1,3 +1,7 @@
-# PUF
+# PRNG
+.idea
+.DS_Store
+PRNG/cmake-build-debug/
 
+# PUF
 PUF/bin
