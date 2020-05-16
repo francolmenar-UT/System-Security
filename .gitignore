@@ -1,6 +1,7 @@
 # PRNG
 .idea
 .DS_Store
+venv
 PRNG/cmake-build-debug/
 
 # PUF
