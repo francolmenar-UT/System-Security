@@ -2,7 +2,9 @@
 .idea
 .DS_Store
 venv
-PRNG/cmake-build-debug/
+sts-2.1.2
+cmake-build-debug/
+__pycache__
 
 # PUF
 PUF/bin
