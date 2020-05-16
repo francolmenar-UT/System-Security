@@ -21,13 +21,17 @@ int main(void) {
 
     // Generate the random numbers
     for (int i = 0; i < OUTPUT_INSTANCES; i++) {
-        // If it is desired to output the total number just leave "gen()" alone
 
-        uint64_t result = gen(); // Calculate the result of the algorithm
+        for (int j = 0; j < BLOCKS; j++) {
+            // If it is desired to output the total number just leave "gen()" alone
 
-        std::bitset <BIT_LENGTH> result_bit(result); // Transform it to a bit string
+            uint64_t result = gen(); // Calculate the result of the algorithm
 
-        std::cout << result_bit << std::endl; // Output the bit string
+            std::bitset<BLOCK_LENGTH> result_bit(result); // Transform it to a bit string
+
+            std::cout << result_bit; // Output the bit string
+        }
+        std::cout << std::endl; // End
     }
 }
 

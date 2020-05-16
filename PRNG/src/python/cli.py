@@ -2,16 +2,8 @@ from pyfiglet import Figlet
 import click
 import os
 
-# Paths to the folders
-test_path = "sts-2.1.2/src"
-program_path = "cmake-build-debug/"
-output_path = "output/"
-
-# Programs path
-c_program = "prng"
-
-# Files path
-output_file = "output.txt"
+from constants import *
+from test_handle import *
 
 
 @click.group()
@@ -29,10 +21,10 @@ def call(ctx):
 
 @main.command(help='Run the C code')
 @click.option('--all', '-a', is_flag=True, help='Run the Make file and Make clean')
-@click.option('--make', '-m', is_flag=True, help='Run the Make file')
 @click.option('--clean', '-c', is_flag=True, help='Run the Make Clean file')
-def run(all, make, clean):
-    click.echo("Running all the C files")
+@click.option('--make', '-m', is_flag=True, help='Run the Make file')
+def run(all, clean, make):
+    click.echo("Compiling xoroshiro128+")
 
     os.chdir(program_path)  # cd
 
@@ -49,13 +41,21 @@ def run(all, make, clean):
 
 @main.command()
 @click.option('--all', '-a', is_flag=True, help='Run all the tests or not')
+@click.option('--clean', '-c', is_flag=True, help='Run the Make Clean file')
+@click.option('--make', '-m', is_flag=True, help='Run the Make file')
 @click.argument('tests', type=str, nargs=-1)
-def test(all, tests):
+def test(all, clean, make, tests):
+    os.chdir(test_path)
+    test_list = []
+    if clean:
+        os.system("make clean")
+    if make:
+        os.system("make")
+        
     if all:  # Execute all the tests
         click.echo("Running all the tests")
 
     else:  # Execute only the given tests
-        test_list = []
         if len(tests) is 0:  # No test introduced
             click.echo('Incorrect test input: Please introduce a test number or a range (1-3)')
             return
@@ -80,8 +80,7 @@ def test(all, tests):
         except ValueError:
             click.echo('Incorrect test input: Please introduce a test number or a range (1-3)')
             return
-
-        click.echo(test_list)
+    test_handle(test_list)
 
 
 if __name__ == '__main__':
