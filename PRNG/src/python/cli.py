@@ -54,6 +54,7 @@ def test(all, clean, make, tests):
         
     if all:  # Execute all the tests
         click.echo("Running all the tests")
+        test_list = list(range(1, 15 + 1))
 
     else:  # Execute only the given tests
         if len(tests) is 0:  # No test introduced
