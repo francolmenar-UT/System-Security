@@ -1,5 +1,7 @@
 import os
 import time
+from constants import *
+
 
 def test_handle(test_list):
     """
@@ -29,5 +31,13 @@ def switch(x):
 
 
 def test_1():
-    os.system("./assess 50")
-    os.system("0")
+    os.system("echo '0' "  # Select option input file
+              "{}{} "  # Path to the output file
+              "0 "  # Choose the tests
+              "100000000000000 "  # Just the first
+              "{} "  # Amount of bit-streams
+              "{} "  # ASCII [0] or Binary [1]
+              "| {} {}".format(output_path_test, output_file,
+                               bit_streams,
+                               file_format,
+                               test_program, total_bit_length))
