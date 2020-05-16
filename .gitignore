@@ -5,3 +5,4 @@ PRNG/cmake-build-debug/
 
 # PUF
 PUF/bin
+PUF/log.txt
