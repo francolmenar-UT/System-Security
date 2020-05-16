@@ -1,9 +1,6 @@
 #include "xoroshiro.hpp"
+#include "config.hpp"
 
-/**** Parameters used in the Algorithm. Defined by the specification ****/
-const int gen_a = 24;
-const int gen_b = 16;
-const int gen_c = 37;
 
 xoroshiro128plus_gen::result_type
 
@@ -24,8 +21,8 @@ xoroshiro128plus_gen::operator()() {
     s1 ^= s0;
 
     // Update the states - Refer to Figure 1.3 of the report for the graphic representation
-    state[0] = rotl(s0, gen_a) ^ s1 ^ (s1 << gen_b);
-    state[1] = rotl(s1, gen_c);
+    state[0] = rotl(s0, GEN_A) ^ s1 ^ (s1 << GEN_B);
+    state[1] = rotl(s1, GEN_C);
 
     return result;
 }
