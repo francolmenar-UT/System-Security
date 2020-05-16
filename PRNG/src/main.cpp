@@ -4,9 +4,7 @@
 #include <bitset>
 
 #include "xoroshiro.hpp"
-
-const int output_instances = 1; // Amount of random numbers generated
-const int bit_number = 50; // Length of the bit string output
+#include "config.hpp"
 
 int main(void) {
     // Create the xoroshiro128+ Generator
@@ -22,12 +20,12 @@ int main(void) {
     std::uniform_real_distribution<> dist(0.0, 1.0);
 
     // Generate the random numbers
-    for (int i = 0; i < output_instances; i++) {
+    for (int i = 0; i < OUTPUT_INSTANCES; i++) {
         // If it is desired to output the total number just leave "gen()" alone
 
         uint64_t result = gen(); // Calculate the result of the algorithm
 
-        std::bitset<bit_number> result_bit (result); // Transform it to a bit string
+        std::bitset <BIT_LENGTH> result_bit(result); // Transform it to a bit string
 
         std::cout << result_bit << std::endl; // Output the bit string
     }

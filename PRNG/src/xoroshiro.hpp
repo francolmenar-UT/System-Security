@@ -4,11 +4,6 @@
 #include <random>
 #include <array>
 
-/**** Parameters used in the Algorithm. Defined by the specification ****/
-extern const int gen_a;
-extern const int gen_b;
-extern const int gen_c;
-
 struct xoroshiro128plus_gen {
 private:
     // State: Two unsigned long long int variables
