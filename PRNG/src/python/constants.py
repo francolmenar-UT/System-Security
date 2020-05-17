@@ -1,12 +1,14 @@
 # Paths to the folders
 test_path = "../../sts-2.1.2/"
-test_path_c = "../sts-2.1.2/" # From the c Program
-program_path = "../../cmake-build-debug/"
+test_path_c = "../sts-2.1.2/"  # From the c Program
+
+program_path = "../../cmake-build-debug/"  # C file folder
+
 output_path = "output/bit_streams/"
 output_path_test = "../output/bit_streams/"  # From the executable of tests
-test_obj = "obj/"
-report_path = "sts-2.1.2/experiments/AlgorithmTesting/finalAnalysisReport.txt"  # Path to the resulting report
-results_path = "output/analysis/"
+
+test_obj = "obj/"  # Belonging to the Test executable section
+results_path = "output/analysis/"  # Path of the resulting analysis file
 
 # Programs path
 c_program = "prng"
@@ -16,15 +18,22 @@ test_program = "./assess"
 output_file = "output.txt"
 test10_file = "test10.txt"
 test12_13_file = "test12.txt"
+
 analysis = "finalAnalysisReport"
+report_path = "sts-2.1.2/experiments/AlgorithmTesting/finalAnalysisReport.txt"  # Path to the resulting report
+
 
 # Variables for test
-total_bit_length = 10000
-bit_streams = 1000
+total_bit_length = 10000  # 10k
+bit_streams = 1000  # 10k
 file_format = 0  # ASCII [0] and Binary [1]
 exec_string = ["0", "0", "0", "0", "0",  # Represents the tests which are going to be executed
                "0", "0", "0", "0", "0",
                "0", "0", "0", "0", "0"]
+
+additional_par = [False, True, False, False, False,
+                  False, False, True, True, False,
+                  True, False, False, True, True]
 
 # Variables for Test 10
 exec_test_10 = ["0", "0", "0", "0", "0",  # Special Execution for test 10
@@ -58,9 +67,6 @@ exec_test_12_13 = ["0", "0", "0", "0", "0",  # Special Execution for test 12 & 1
 
 exe_12_13 = "000000000001100"
 
-
 # The sixth requires 32x32 bits -> Handled by increasing the size
 # The 10th is different -> Handled special case created
-additional_par = [False, True, False, False, False,
-                  False, False, True, True, False,
-                  True, False, False, True, True]
+
