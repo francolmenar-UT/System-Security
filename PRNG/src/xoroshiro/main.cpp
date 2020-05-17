@@ -10,7 +10,8 @@ int main(int argc, char *argv[]) {
     int output_instances = std::stoi(argv[1]);
     int total_bit_length_C = std::stoi(argv[2]);
     // Calculates the amount of blocks needed rounding up the result
-    int blocks = (total_bit_length_C / BLOCK_LENGTH) + (((total_bit_length_C < 0) ^ (BLOCK_LENGTH > 0)) && (total_bit_length_C % BLOCK_LENGTH));
+    int blocks = (total_bit_length_C / BLOCK_LENGTH) +
+                 (((total_bit_length_C < 0) ^ (BLOCK_LENGTH > 0)) && (total_bit_length_C % BLOCK_LENGTH));
 
     // Create the xoroshiro128+ Generator
     xoroshiro128plus_gen gen;

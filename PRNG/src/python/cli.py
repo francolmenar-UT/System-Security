@@ -1,7 +1,6 @@
 import click
-from pyfiglet import Figlet
 import os
-
+from pyfiglet import Figlet
 from constants import *
 from test_handle import *
 
@@ -14,17 +13,27 @@ def main():
 @main.command()
 @click.pass_context
 def all(ctx):
+    """
+    Executes the run and test commands.
+    Run: It uses the flags for performing a make clean & make all
+    Test: It uses the flags for performing a make clean & make all and inside_c to set correctly the paths
+    :param ctx: Context need to invoking commands
+    """
     # Test Command for later use
     ctx.invoke(run, all=True)
     ctx.invoke(test, all=True, clean=True, make=True, inside_c=True)
+    return 0
 
 
-@main.command(help='Run the C code')
-@click.option('--all', '-a', is_flag=True, help='Run the Make file and Make clean')
-@click.option('--clean', '-c', is_flag=True, help='Run the Make Clean file')
-@click.option('--make', '-m', is_flag=True, help='Run the Make file')
+@main.command(help='Compiles the C code')
+@click.option('--all', '-a', is_flag=True, help='Run the make clean && make')
+@click.option('--clean', '-c', is_flag=True, help='Run the make clean')
+@click.option('--make', '-m', is_flag=True, help='Run just make')
 def run(all, clean, make):
-    os.chdir(program_path)  # cd
+    """
+    Compiles the C code
+    """
+    os.chdir(program_path)
 
     if all:
         os.system("make clean && make all")
@@ -37,18 +46,22 @@ def run(all, clean, make):
     os.system("./{} "
               "{} {} "
               "> ../{}{}".format(c_program,
-                                 bit_streams, total_bit_length,
+                                 bit_streams, total_bit_length,  # Set the length of the output streams
                                  output_path, output_file))
+    return 0
 
 
 @main.command()
-@click.option('--all', '-a', is_flag=True, help='Run all the tests or not')
-@click.option('--clean', '-c', is_flag=True, help='Run the Make Clean file')
-@click.option('--make', '-m', is_flag=True, help='Run the Make file')
-@click.option('--inside_c', is_flag=True)
+@click.option('--all', '-a', is_flag=True, help='Run all the tests')
+@click.option('--clean', '-c', is_flag=True, help='Run the make clean')
+@click.option('--make', '-m', is_flag=True, help='Run just make')
+@click.option('--inside_c', is_flag=True, help='Just to be used from `all` command')
 @click.argument('tests', type=str, nargs=-1)
 def test(all, clean, make, tests, inside_c):
-    if inside_c:
+    """
+    Process the input for running the tests and sends the data to test_handle()
+    """
+    if inside_c:  # It is called from "all". Sets the path to the correct place
         os.chdir(test_path_c)
     else:
         os.chdir(test_path)
@@ -59,12 +72,12 @@ def test(all, clean, make, tests, inside_c):
         os.system("make")
 
     if all:  # Execute all the tests
-        test_list = list(range(1, 15 + 1))
+        test_list = list(range(1, 15 + 1))  # Set the range of all the tests
 
     else:  # Execute only the given tests
         if len(tests) is 0:  # No test introduced
             click.echo('Incorrect test input: Please introduce a test number or a range (1-3)')
-            return
+            return -1
 
         try:  # Convert the input ranges into a list of numbers
             for file in tests:
@@ -81,16 +94,17 @@ def test(all, clean, make, tests, inside_c):
 
                 else:  # Wrong format
                     click.echo('Incorrect test input: Please introduce a test number or a range (1-3)')
-                    return
+                    return -1
 
-        except ValueError:
+        except ValueError:  # Wrong format
             click.echo('Incorrect test input: Please introduce a test number or a range (1-3)')
-            return
-    test_handle(test_list)
+            return -1
+
+    test_handle(test_list)  # Calls for executing the tests
+    return 0
 
 
-# Useless cool text
-f = Figlet(font='slant')
+f = Figlet(font='slant')  # Useless cool text
 print(f.renderText('PRNG'))
 
-main()
+main()  # Runs the cli
