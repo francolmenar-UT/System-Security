@@ -45,8 +45,4 @@ void xoroshiro128plus_gen::seed(std::function<uint32_t(void)> f) {
     state[1] = (x_0 << 32) | x_1;
 }
 
-void xoroshiro128plus_gen::seed(const std::array<uint32_t, 4> &a) {
-    state[0] = ((uint64_t) a[0] << 32) | (uint64_t) a[1];
-    state[1] = ((uint64_t) a[2] << 32) | (uint64_t) a[3];
-}
 

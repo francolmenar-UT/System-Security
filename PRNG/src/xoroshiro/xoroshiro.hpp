@@ -31,8 +31,6 @@ public:
     result_type operator()();
 
     void seed(std::function<uint32_t(void)>);
-
-    void seed(const std::array<uint32_t, 4> &);
 };
 
 #endif
