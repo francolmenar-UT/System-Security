@@ -71,7 +71,7 @@ def test(all, clean, make, tests, inside_c):
                 range_split = file.split('-')  # Split the range tests
 
                 if len(range_split) is 1:  # Check if it is a single value, not a range
-                    test_list.append(range_split[0])
+                    test_list.append(int(range_split[0]))
 
                 elif len(range_split) is 2:  # Check if it is in range format
                     list_tests = list(range(int(range_split[0]), int(range_split[1]) + 1))
