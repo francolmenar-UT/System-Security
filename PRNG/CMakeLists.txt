@@ -3,7 +3,7 @@ project(PRNG)
 
 ## file globbing ##
 
-file(GLOB_RECURSE sources src/*.cpp src/*.h)
+file(GLOB_RECURSE sources src/xoroshiro/*.cpp src/xoroshiro/*.h)
 
 ## target definitions ##
 
@@ -25,7 +25,7 @@ install(TARGETS prng DESTINATION example_destination)
 
 # Create the package
 
-set(CPACK_PACKAGE_NAME "MyExample")
+set(CPACK_PACKAGE_NAME "prng")
 set(CPACK_PACKAGE_VERSION "1.0.0")
 
 # Do not split the program up into several incomplete pieces.
