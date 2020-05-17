@@ -1,5 +1,5 @@
-from pyfiglet import Figlet
 import click
+from pyfiglet import Figlet
 import os
 
 from constants import *
@@ -13,10 +13,10 @@ def main():
 
 @main.command()
 @click.pass_context
-def call(ctx):
+def all(ctx):
     # Test Command for later use
-    click.echo("Call")
     ctx.invoke(run, all=True)
+    ctx.invoke(test, all=True, clean=True, make=True, inside_c=True)
 
 
 @main.command(help='Run the C code')
@@ -24,8 +24,6 @@ def call(ctx):
 @click.option('--clean', '-c', is_flag=True, help='Run the Make Clean file')
 @click.option('--make', '-m', is_flag=True, help='Run the Make file')
 def run(all, clean, make):
-    click.echo("Compiling xoroshiro128+")
-
     os.chdir(program_path)  # cd
 
     if all:
@@ -36,24 +34,31 @@ def run(all, clean, make):
         if make:
             os.system("make all")
 
-    os.system("./" + c_program + " > " + "../" + output_path + output_file)
+    os.system("./{} "
+              "{} {} "
+              "> ../{}{}".format(c_program,
+                                 bit_streams, total_bit_length,
+                                 output_path, output_file))
 
 
 @main.command()
 @click.option('--all', '-a', is_flag=True, help='Run all the tests or not')
 @click.option('--clean', '-c', is_flag=True, help='Run the Make Clean file')
 @click.option('--make', '-m', is_flag=True, help='Run the Make file')
+@click.option('--inside_c', is_flag=True)
 @click.argument('tests', type=str, nargs=-1)
-def test(all, clean, make, tests):
-    os.chdir(test_path)
+def test(all, clean, make, tests, inside_c):
+    if inside_c:
+        os.chdir(test_path_c)
+    else:
+        os.chdir(test_path)
     test_list = []
     if clean:
         os.system("make clean")
     if make:
         os.system("make")
-        
+
     if all:  # Execute all the tests
-        click.echo("Running all the tests")
         test_list = list(range(1, 15 + 1))
 
     else:  # Execute only the given tests
@@ -84,9 +89,8 @@ def test(all, clean, make, tests):
     test_handle(test_list)
 
 
-if __name__ == '__main__':
-    # Useless cool text
-    f = Figlet(font='slant')
-    print(f.renderText('PRNG'))
+# Useless cool text
+f = Figlet(font='slant')
+print(f.renderText('PRNG'))
 
-    main()
+main()

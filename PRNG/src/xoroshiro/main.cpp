@@ -6,7 +6,12 @@
 #include "xoroshiro.hpp"
 #include "config.hpp"
 
-int main(void) {
+int main(int argc, char *argv[]) {
+    int output_instances = std::stoi(argv[1]);
+    int total_bit_length_C = std::stoi(argv[2]);
+    // Calculates the amount of blocks needed rounding up the result
+    int blocks = (total_bit_length_C / BLOCK_LENGTH) + (((total_bit_length_C < 0) ^ (BLOCK_LENGTH > 0)) && (total_bit_length_C % BLOCK_LENGTH));
+
     // Create the xoroshiro128+ Generator
     xoroshiro128plus_gen gen;
 
@@ -20,9 +25,9 @@ int main(void) {
     std::uniform_real_distribution<> dist(0.0, 1.0);
 
     // Generate the random numbers
-    for (int i = 0; i < OUTPUT_INSTANCES; i++) {
+    for (int i = 0; i < output_instances; i++) {
 
-        for (int j = 0; j < BLOCKS; j++) {
+        for (int j = 0; j < blocks; j++) {
             // If it is desired to output the total number just leave "gen()" alone
 
             uint64_t result = gen(); // Calculate the result of the algorithm

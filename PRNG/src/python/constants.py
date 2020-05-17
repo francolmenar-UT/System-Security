@@ -1,5 +1,6 @@
 # Paths to the folders
 test_path = "../../sts-2.1.2/"
+test_path_c = "../sts-2.1.2/" # From the c Program
 program_path = "../../cmake-build-debug/"
 output_path = "output/"
 output_path_test = "../output/"  # From the executable of tests
@@ -15,8 +16,8 @@ test10_file = "test10.txt"
 test12_13_file = "test12.txt"
 
 # Variables for test
-total_bit_length = 1300
-bit_streams = 100
+total_bit_length = 10000
+bit_streams = 1000
 file_format = 0  # ASCII [0] and Binary [1]
 exec_string = ["0", "0", "0", "0", "0",  # Represents the tests which are going to be executed
                "0", "0", "0", "0", "0",
@@ -52,4 +53,4 @@ exec_test_12_13 = ["0", "0", "0", "0", "0",  # Special Execution for test 12 & 1
 # The 10th is different -> Handled special case created
 additional_par = [False, True, False, False, False,
                   False, False, True, True, False,
-                  True, False, False, True, True] 
+                  True, False, False, True, True]
