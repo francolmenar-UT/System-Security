@@ -67,6 +67,4 @@ exec_test_12_13 = ["0", "0", "0", "0", "0",  # Special Execution for test 12 & 1
 
 exe_12_13 = "000000000001100"
 
-# The sixth requires 32x32 bits -> Handled by increasing the size
-# The 10th is different -> Handled special case created
 
