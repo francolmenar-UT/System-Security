@@ -5,6 +5,9 @@ venv
 sts-2.1.2
 cmake-build-debug/
 __pycache__
+PRNG/output/process_str/*
+PRNG/output/bit_streams/*
+PRNG/output/analysis/*
 
 # PUF
 PUF/bin
