@@ -1,7 +1,6 @@
 import click
-import os
 from pyfiglet import Figlet
-from constants import *
+from processing import *
 from test_handle import *
 
 
@@ -11,16 +10,19 @@ def main():
 
 
 @main.command()
+@click.option('--post', '-p', is_flag=True, help='Run van Neumann post processing')
 @click.pass_context
-def all(ctx):
+def all(ctx, post):
     """
     Executes the run and test commands.
     Run: It uses the flags for performing a make clean & make all
     Test: It uses the flags for performing a make clean & make all and inside_c to set correctly the paths
     :param ctx: Context need to invoking commands
     """
-    # Test Command for later use
-    ctx.invoke(run, all=True)
+    if post:  # Run using post processed data
+        ctx.invoke(run, all=True, post=True)
+    else:  # Not post processed data
+        ctx.invoke(run, all=True)
     ctx.invoke(test, all=True, clean=True, make=True, inside_c=True)
     return 0
 
@@ -29,7 +31,8 @@ def all(ctx):
 @click.option('--all', '-a', is_flag=True, help='Run the make clean && make')
 @click.option('--clean', '-c', is_flag=True, help='Run the make clean')
 @click.option('--make', '-m', is_flag=True, help='Run just make')
-def run(all, clean, make):
+@click.option('--post', '-p', is_flag=True, help='Run van Neumann post processing')
+def run(all, clean, make, post):
     """
     Compiles the C code
     """
@@ -43,11 +46,15 @@ def run(all, clean, make):
         if make:
             os.system("make all")
 
-    os.system("./{} "
-              "{} {} "
-              "> ../{}{}".format(c_program,
-                                 bit_streams, total_bit_length,  # Set the length of the output streams
-                                 output_path, output_file))
+    if post:  # Run using post processed data
+        post_processing()
+
+    else:  # Not post processed data
+        os.system("./{} "
+                  "{} {} "
+                  "> {}{}".format(c_program,
+                                  bit_streams, total_bit_length,  # Set the length of the output streams
+                                  output_path, output_file))
     return 0
 
 
