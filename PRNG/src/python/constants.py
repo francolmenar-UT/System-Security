@@ -28,7 +28,7 @@ analysis = "finalAnalysisReport"
 report_path = "sts-2.1.2/experiments/AlgorithmTesting/finalAnalysisReport.txt"  # Path to the resulting report
 
 # Variables for post processing
-post_val = 4  # To multiply the original length so to have enough raw data
+post_val = 6  # To multiply the original length so to have enough raw data
 
 # Variables for test
 total_bit_length = 10000  # 10k

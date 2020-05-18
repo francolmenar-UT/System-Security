@@ -54,7 +54,6 @@ def post_processing():
 
             if new_line == -1:  # Error checking
                 return -1
-
             output_f.write(new_line)  # Write the processed line to the output text file
 
     input_f.close()
