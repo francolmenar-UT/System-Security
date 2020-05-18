@@ -28,16 +28,11 @@ analysis = "finalAnalysisReport"
 report_path = "sts-2.1.2/experiments/AlgorithmTesting/finalAnalysisReport.txt"  # Path to the resulting report
 
 # Variables for post processing
-post_val = 4  # To multiply the original length so to hve enough raw data
-test_total_bit_length = 100
-test_bit_streams = 5
+post_val = 4  # To multiply the original length so to have enough raw data
 
 # Variables for test
-# total_bit_length = 10000  # 10k
-# bit_streams = 1000  # 1k
-
-total_bit_length = 400  # TEST
-bit_streams = 5  # TEST
+total_bit_length = 10000  # 10k
+bit_streams = 1000  # 1k
 
 file_format = 0  # ASCII [0] and Binary [1]
 exec_string = ["0", "0", "0", "0", "0",  # Represents the tests which are going to be executed

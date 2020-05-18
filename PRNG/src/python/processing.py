@@ -9,7 +9,7 @@ def call():
     os.system("./{} "
               "{} {} "
               "> {}{}".format(c_program,
-                              test_bit_streams, test_total_bit_length * post_val,
+                              bit_streams, total_bit_length * post_val,
                               # Set the length of the output streams
                               process_path, output_file_pre))
 
@@ -27,17 +27,11 @@ def process_line(line):
         return -1
 
     for i in range(0, for_index):  # Go through all the chars of the line 2 by two
-        # TODO Apply the post processing as it is explained in the slides
 
-        aux = line[i * 2 + 2]
-        new_line += line[i * 2] + line[i * 2 + 1]
+        if line[i * 2] != line[i * 2 + 1]:  # If they are not the same the first bit is taken
+            new_line += line[i * 2]  # Copy just the first one
 
-        if i == for_index:  # Last char - It does not reach here
-            print("i: {} with real index {}".format(i, i * 2))
-            # line[i * 2 + 2] is the new line char
-            print("Exiting, last char = {} with real index {}".format(line[i * 2 + 2], i * 2 + 2))
-
-    return new_line + '\n'
+    return new_line
 
 
 def post_processing():
@@ -50,17 +44,19 @@ def post_processing():
 
     with open(process_path + output_file_pre) as input_f:  # Read the pre processed data
         for line in input_f:  # Go line by line
-            new_line = process_line(line)
+            new_line = ""  # Reset the new line to be added
 
-            # TODO check that the length of the obtained line is the expected
-            # TODO If not call again with itself as a concatenated bit stream
+            # Process the line until the length is at least the defined bit stream length
+            while len(new_line) < total_bit_length:
+                new_line += process_line(line)  # Append the newly processed line
+
+            new_line = new_line[:total_bit_length] + '\n'
 
             if new_line == -1:  # Error checking
                 return -1
-            output_f.write(new_line)
+
+            output_f.write(new_line)  # Write the processed line to the output text file
 
     input_f.close()
     output_f.close()
-
-    # you may also want to remove whitespace characters like `\n` at the end of each line
-    # conines = [line.rstrip('\n') for line in file]
+    return 0
