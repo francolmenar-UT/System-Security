@@ -20,9 +20,9 @@ def all(ctx, post):
     :param ctx: Context need to invoking commands
     """
     if post:  # Run using post processed data
-        ctx.invoke(run, all=True, post=True)
+        ctx.invoke(run, all=False, post=True)
     else:  # Not post processed data
-        ctx.invoke(run, all=True)
+        ctx.invoke(run, all=False)
     ctx.invoke(test, all=True, clean=True, make=True, inside_c=True)
     return 0
 
