@@ -39,15 +39,12 @@ def run(all, clean, make, post):
     os.chdir(program_path)
 
     if all:
-        print()
-        # os.system("make clean && make all")
+        os.system("make clean && make all")
     else:
         if clean:
-            print()
-            # os.system("make clean")
+            os.system("make clean")
         if make:
-            print()
-            # os.system("make all")
+            os.system("make all")
 
     if post:  # Run using post processed data
         post_processing()
