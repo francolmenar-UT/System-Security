@@ -4,6 +4,8 @@
 venv
 cmake-build-debug/
 __pycache__
+PRNG/sts-2.1.2/
+PRNG/sts-2.1.2/experiments/
 
 # PUF
 PUF/bin
