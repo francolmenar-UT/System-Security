@@ -2,6 +2,7 @@ import csv
 import numpy as np
 
 from sklearn import svm, tree
+from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.neighbors import KNeighborsClassifier, RadiusNeighborsClassifier
 from sklearn.model_selection import StratifiedKFold, StratifiedShuffleSplit, cross_val_score
@@ -27,9 +28,11 @@ Y = np.array(output)
 # Define validation constants
 k_fold = StratifiedShuffleSplit(3, random_state=0)
 #SCORING = ["recall_micro", "precision_micro", "accuracy", "f1_micro", "recall_macro", "precision_macro", "f1_macro", "recall_weighted", "precision_weighted", "f1_weighted"]
-SCORING = ["recall_weighted", "precision_weighted", "f1_weighted"]
+SCORING = ["recall_weighted", "precision_weighted",  "accuracy", "f1_weighted"]
+#SCORING = ["recall", "precision", "f1"]
 N_NEIGHBORS = 3
 classifiers = {
+    'LogReg': LogisticRegression(solver="lbfgs"),
     'svc': svm.SVC(gamma=0.001, C=100.),
     'DT': tree.DecisionTreeClassifier(),
     'RF': RandomForestClassifier(n_estimators=50, max_depth=20, random_state=3),
