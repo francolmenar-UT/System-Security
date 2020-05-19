@@ -39,7 +39,8 @@ def run(all, clean, make, post):
     os.chdir(program_path)
 
     if all:
-        os.system("make clean && make all")
+        print()
+        # os.system("make clean && make all")
     else:
         if clean:
             print()
