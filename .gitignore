@@ -1,12 +1,7 @@
 # PRNG
-PRNG/output/analysis/*
-PRNG/output/bit_streams/*
-PRNG/output/process_str/*
-
 .idea
 .DS_Store
 venv
-sts-2.1.2
 cmake-build-debug/
 __pycache__
 

@@ -1,0 +1,80 @@
+		UNIVERSAL STATISTICAL TEST
+		--------------------------------------------
+		COMPUTATIONAL INFORMATION:
+		--------------------------------------------
+		(a) L         = 9
+		(b) Q         = 5120
+		(c) K         = 577422
+		(d) sum       = 4721490.392063
+		(e) sigma     = 0.001478
+		(f) variance  = 3.311000
+		(g) exp_value = 8.176425
+		(h) phi       = 8.176845
+		(i) WARNING:  2 bits were discarded.
+		-----------------------------------------
+SUCCESS		p_value = 0.775978
+
+		UNIVERSAL STATISTICAL TEST
+		--------------------------------------------
+		COMPUTATIONAL INFORMATION:
+		--------------------------------------------
+		(a) L         = 9
+		(b) Q         = 5120
+		(c) K         = 577422
+		(d) sum       = 4721549.452344
+		(e) sigma     = 0.001478
+		(f) variance  = 3.311000
+		(g) exp_value = 8.176425
+		(h) phi       = 8.176948
+		(i) WARNING:  2 bits were discarded.
+		-----------------------------------------
+SUCCESS		p_value = 0.723508
+
+		UNIVERSAL STATISTICAL TEST
+		--------------------------------------------
+		COMPUTATIONAL INFORMATION:
+		--------------------------------------------
+		(a) L         = 9
+		(b) Q         = 5120
+		(c) K         = 577422
+		(d) sum       = 4722243.193631
+		(e) sigma     = 0.001478
+		(f) variance  = 3.311000
+		(g) exp_value = 8.176425
+		(h) phi       = 8.178149
+		(i) WARNING:  2 bits were discarded.
+		-----------------------------------------
+SUCCESS		p_value = 0.243314
+
+		UNIVERSAL STATISTICAL TEST
+		--------------------------------------------
+		COMPUTATIONAL INFORMATION:
+		--------------------------------------------
+		(a) L         = 9
+		(b) Q         = 5120
+		(c) K         = 577422
+		(d) sum       = 4722367.446090
+		(e) sigma     = 0.001478
+		(f) variance  = 3.311000
+		(g) exp_value = 8.176425
+		(h) phi       = 8.178364
+		(i) WARNING:  2 bits were discarded.
+		-----------------------------------------
+SUCCESS		p_value = 0.189402
+
+		UNIVERSAL STATISTICAL TEST
+		--------------------------------------------
+		COMPUTATIONAL INFORMATION:
+		--------------------------------------------
+		(a) L         = 9
+		(b) Q         = 5120
+		(c) K         = 577422
+		(d) sum       = 4721747.946776
+		(e) sigma     = 0.001478
+		(f) variance  = 3.311000
+		(g) exp_value = 8.176425
+		(h) phi       = 8.177291
+		(i) WARNING:  2 bits were discarded.
+		-----------------------------------------
+SUCCESS		p_value = 0.557618
+
