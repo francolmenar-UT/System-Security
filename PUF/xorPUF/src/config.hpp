@@ -19,7 +19,7 @@
 #define LOGFILE "log.txt"
 
 // If set log the challenge
-//#define LOG_CHALLENGE
+#define LOG_CHALLENGE
 // How many bit to print per line if the challenge is not printed
 #define BIT_PER_LINE 5242880
 
