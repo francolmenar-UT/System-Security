@@ -5,4 +5,6 @@ cd cmake-build-debug/
 cmake ..
 
 cd ../src/python/
-python3 cli.py run -a
+python cli.py run -m
+
+python3 cli.py run -m
