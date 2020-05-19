@@ -42,9 +42,11 @@ def run(all, clean, make, post):
         os.system("make clean && make all")
     else:
         if clean:
-            os.system("make clean")
+            print()
+            # os.system("make clean")
         if make:
-            os.system("make all")
+            print()
+            # os.system("make all")
 
     if post:  # Run using post processed data
         post_processing()
