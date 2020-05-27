@@ -14,3 +14,6 @@ KEY_STEP = 24  # Increasing step for the key size
 
 MIN = 0  # Index in the lists for the maximum value
 MAX = 1  # Index in the lists for the maximum value
+
+KEY_FOLDER_PATH = "data/keys/"
+KEY_FILE_PATH = "keys.csv"
