@@ -1,9 +1,11 @@
 import click
 from pyfiglet import Figlet
 
+from src.algorithms.ladder import square_ladder
 from src.algorithms.square_mult import square_mult
+from src.algorithms.square_mult_alw import square_mult_alw
+from src.functions.crypto import generate_e, generate_rsa_keys, save_keys, load_keys
 from src.graph.createGraph import create_graph
-from src.functions.crypto import generate_e, generate_key_size, generate_rsa_keys, save_keys, load_keys
 
 
 @click.group()
@@ -15,9 +17,6 @@ def main():
 @click.pass_context
 def all(ctx):
     """
-    Executes the run and test commands.
-    Run: It uses the flags for performing a make clean & make all
-    Test: It uses the flags for performing a make clean & make all and inside_c to set correctly the paths
     :param ctx: Context need to invoking commands
     """
     ctx.invoke(run, key=True)
@@ -32,14 +31,20 @@ def run(ctx, key, load):
     """
     # TODO
     """
-    key_list = []
-    if key:  # Generate the keys
-        key_list = ctx.invoke(keys)
-    elif load:  # Load the keys
-        key_list = load_keys()
-
-    square_mult(key_list)  # Execute
-
+    for i in range(0, 3):  # Ran the three algorithms
+        key_list = []
+        if key:  # Generate the keys
+            key_list = ctx.invoke(keys)
+        elif load:  # Load the keys
+            key_list = load_keys()
+        if i == 0:
+            # square_mult(key_list)  # Execute 1
+            print()
+        elif i == 1:
+            # square_mult_alw(key_list)  # Execute 2
+            print()
+        elif i == 2:
+            square_ladder(key_list)  # Execute 3
     return 0
 
 
@@ -59,7 +64,6 @@ def graph():
     """
     Generates the RSA Keys
     """
-    # TODO
     create_graph()
     return 0
 
