@@ -1,3 +1,4 @@
+from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives import serialization
@@ -22,3 +23,11 @@ def rsa_encrypt(msg, public_key_str):
 
     return ciphertext
 
+
+def create_key():
+    key = rsa.generate_private_key(
+        public_exponent=3,
+        key_size=512,
+        backend=default_backend()
+    )
+    return key.public_key().public_numbers().e, key.private_numbers().d, key.public_key().public_numbers().n, key
