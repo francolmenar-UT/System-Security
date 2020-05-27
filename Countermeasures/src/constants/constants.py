@@ -19,8 +19,17 @@ KEY_FILE_PATH = "keys.csv"
 MULT_FOLDER_PATH = "data/square_mult/"
 MULT_FILE_PATH = "square_mult_results.csv"
 
+MULT_ALW_FOLDER_PATH = "data/square_mult_alw/"
+MULT_ALW_FILE_PATH = "square_mult_alw_results.csv"
+
+MULT_LD_FOLDER_PATH = "data/ladder/"
+MULT_LD_FILE_PATH = "ladder.csv"
+
+
 IMG = [
-    "square_mult"
+    "square_mult",
+    "square_mult_alw",
+    "ladder"
 ]
 IMG_FOLDER_PATH = "img/"
 

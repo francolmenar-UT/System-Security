@@ -1,4 +1,3 @@
-import time
 import timeit
 
 from src.constants.constants import MULT_FOLDER_PATH, MULT_FILE_PATH, EXE_REP
