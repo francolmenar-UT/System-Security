@@ -12,7 +12,7 @@ def generate_e():
     Generates all the values for the exponent value according to the range values
     :return: Np array with the exponent values
     """
-    x = np.arange(E[MIN], E[MAX])  # Create the array of exponents with the constant values defined
+    x = np.arange(E[MIN], E[MAX], E_STEP)  # Create the array of exponents with the constant values defined
     index = []  # Array to remove the even elements
 
     for i, element in enumerate(x):
@@ -26,10 +26,12 @@ def generate_key_size():
     Generates all the values for the key size value according to the range values
     :return: Np array with the key size values
     """
-    return np.arange(KEY_SIZE[MIN], KEY_SIZE[MAX], KEY_STEP)  # Creates a np array with the constant values
+    # TODO
+    # return np.arange(KEY_SIZE[MIN], KEY_SIZE[MAX], KEY_STEP)  # Creates a np array with the constant values
+    return np.array([KEY_SIZE[MAX]])  # Only one key size
 
 
-def generate_rsa_keys(e_list, key_sz_list):
+def generate_rsa_keys(e_list):
     """
     Generates the RSA keys as a list of KeyObject
     :param e_list: List of exponents to be used
@@ -38,25 +40,10 @@ def generate_rsa_keys(e_list, key_sz_list):
     """
     key_list_aux = []
     for e_i in e_list:
-        for k_i in key_sz_list:
-            key_list_aux.append(create_key(np.int16(e_i).item(),  # Create and append the new key
-                                           np.int16(k_i).item()))
+        key_list_aux.append(KeyObject(e=e_i, n=N, msg=MSG))
+        # key_list_aux.append(create_key(np.int32(e_i).item(),  # Create and append the new key
+        #                               np.int32(k_i).item()))
     return key_list_aux
-
-
-def create_key(e, key_s):
-    """
-    Creates an RSA key as a KeyObject
-    :param e: Exponent to be used
-    :param key_s: Key size to be used
-    :return: A KeyObject as the newly created key
-    """
-    key = rsa.generate_private_key(
-        public_exponent=e,
-        key_size=key_s,
-        backend=default_backend()
-    )
-    return KeyObject(key=key, key_size=key_s)
 
 
 def save_keys(key_list):
@@ -69,8 +56,7 @@ def save_keys(key_list):
     keys_str = ""
 
     for key in key_list:
-        keys_str += str(key.e) + ',' + str(key.d) + ',' + \
-                    str(key.n) + ',' + str(key.key_size) + '\n'  # Append the data in a csv form
+        keys_str += str(key.e) + '\n'  # Append the data in a csv form
 
     output_f.write(keys_str)  # Write the processed line to the output text file
     return 0
@@ -84,6 +70,5 @@ def load_keys():
     key_list_loaded = []
     data = pd.read_csv(KEY_FOLDER_PATH + KEY_FILE_PATH, header=None)  # Read the csv file
     for index, row in data.iterrows():  # Read each of the rows
-        key_list_loaded.append(KeyObject(e=int(row[0]), d=int(row[1]),  # Create the object with the csv data
-                                         n=int(row[2]), key_size=int(row[3])))
+        key_list_loaded.append(KeyObject(e=int(row[0]), n=N, msg=MSG))  # Create the object with the csv data
     return key_list_loaded
