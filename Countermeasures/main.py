@@ -2,6 +2,7 @@ import click
 from pyfiglet import Figlet
 
 from src.algorithms.square_mult import square_mult
+from src.graph.createGraph import create_graph
 from src.functions.crypto import generate_e, generate_key_size, generate_rsa_keys, save_keys, load_keys
 
 
@@ -59,6 +60,7 @@ def graph():
     Generates the RSA Keys
     """
     # TODO
+    create_graph()
     return 0
 
 
