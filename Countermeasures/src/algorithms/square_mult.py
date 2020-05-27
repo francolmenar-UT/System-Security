@@ -1,7 +1,7 @@
 import time
 import timeit
 
-from src.constants.constants import MULT_FOLDER_PATH, MULT_FILE_PATH
+from src.constants.constants import MULT_FOLDER_PATH, MULT_FILE_PATH, EXE_REP
 
 
 def square_mult(key_list):
@@ -28,7 +28,7 @@ def run(msg, exponent, n):
     :param n:
     :return:
     """
-    enc_time = timeit.timeit(lambda: exp(msg, exponent, n), number=20)
+    enc_time = timeit.timeit(lambda: exp(msg, exponent, n), number=EXE_REP)
     return enc_time
 
 
