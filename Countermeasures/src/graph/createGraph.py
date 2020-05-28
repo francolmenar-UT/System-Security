@@ -24,19 +24,39 @@ def create_graph():
             break
         else:
             name += IMG_FOLDER_PATH + IMG[idx]
-            name_plt += NAME[idx]
+            name_plt += NAME_AUX[idx]
             createPlots(EXE_COL, EXP_COL, data[idx], LABEL[idx], COLOUR[idx],
-                        X_AXIS, Y_AXIS, POINT_SIZE, NAME[idx], AXIS, GRID_LINESTYLE)
+                        X_AXIS, Y_AXIS, POINT_SIZE, NAME[idx], AXIS, GRID_LINESTYLE, grid_colour=GRID_COLOUR)
 
         for i in range(idx + 1, len(data)):  # Each graph prints the comparison with the following ones
             createPlots(EXE_COL, EXP_COL, data[i], LABEL[i], COLOUR[i],
-                        X_AXIS, Y_AXIS, POINT_SIZE, NAME[i], AXIS, GRID_LINESTYLE)
+                        X_AXIS, Y_AXIS, POINT_SIZE, NAME[i], AXIS, GRID_LINESTYLE, grid_colour=GRID_COLOUR)
 
             name += " & " + IMG[i]
             name_plt += " & \n" + NAME_AUX[i]
         plt.title(name_plt)
         plt.savefig(name + ".png", dpi=600)
         plt.close()
+
+    for idx, arr in enumerate(data):  # Two graphs - Not last
+        if idx == len(data) - 2:  # The two last ones are handled in the loop before
+            break
+
+        for i in range(idx + 1, len(data)):  # Each graph prints the comparison with one of the following ones
+            name = IMG_FOLDER_PATH + IMG[idx]  # Base graph
+            name_plt = NAME_AUX[idx]
+            createPlots(EXE_COL, EXP_COL, data[idx], LABEL[idx], COLOUR[idx],
+                        X_AXIS, Y_AXIS, POINT_SIZE, NAME[idx], AXIS, GRID_LINESTYLE, grid_colour=GRID_COLOUR)
+
+            name += " & " + IMG[i]
+            name_plt += " & \n" + NAME_AUX[i]
+
+            createPlots(EXE_COL, EXP_COL, data[i], LABEL[i], COLOUR[i],  # Graph compared to
+                        X_AXIS, Y_AXIS, POINT_SIZE, NAME[i], AXIS, GRID_LINESTYLE, grid_colour=GRID_COLOUR)
+
+            plt.title(name_plt)
+            plt.savefig(name + ".png", dpi=600)
+            plt.close()
 
 
 def readfiles(files):
@@ -57,7 +77,7 @@ def readfiles(files):
 
 
 def createPlots(c1, c2, data, label, colour,
-                x_axis, y_axis, point_size, name, axis, grid_linestyle):
+                x_axis, y_axis, point_size, name, axis, grid_linestyle, grid_colour=None):
     x = data[c1]
     y = data[c2]
 
@@ -75,5 +95,7 @@ def createPlots(c1, c2, data, label, colour,
 
     lgnd = plt.legend(loc="lower right", numpoints=1, fontsize=10)
     # lgnd.legendHandles[0]._legmarker.set_markersize(4)
-
-    plt.grid(True, color=colour, alpha=0.3, linestyle=grid_linestyle)
+    if grid_colour is None:
+        plt.grid(True, color=colour, alpha=0.3, linestyle=grid_linestyle)
+    else:
+        plt.grid(True, color=grid_colour, linestyle=grid_linestyle)
