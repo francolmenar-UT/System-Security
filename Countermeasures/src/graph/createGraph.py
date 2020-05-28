@@ -97,7 +97,7 @@ def readfiles(files):
         data_tmp = pd.read_csv(file, sep=",", header=None, names=[c1, c2])
 
         # round numbers and convert
-        data_tmp[c1] = round(data_tmp[c1].astype(float) / 1e6)
+        data_tmp[c1] = round(data_tmp[c1].astype(float) / 1e10)
 
         # insert zero in both columns at index 1
         line = pd.DataFrame({c1: 0, c2: 0}, index=[0])
