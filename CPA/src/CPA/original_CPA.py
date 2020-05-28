@@ -32,9 +32,9 @@ def intermediate(pt, keyguess):
     return sbox[pt ^ keyguess]
 
 
-traces = np.load(r'/Users/fran/Documents/Estudios/Master/1º-Master/Q4/System-Security/System-Security/CPA/data/chipwhisperer_data/traces.npy')
-pt = np.load(r'/Users/fran/Documents/Estudios/Master/1º-Master/Q4/System-Security/System-Security/CPA/data/chipwhisperer_data/plain.npy')
-knownkey = np.load(r'/Users/fran/Documents/Estudios/Master/1º-Master/Q4/System-Security/System-Security/CPA/data/chipwhisperer_data/key.npy')
+traces = np.load(r'/data/chipwhisperer_data/traces.npy')
+pt = np.load(r'/data/chipwhisperer_data/plain.npy')
+knownkey = np.load(r'/data/chipwhisperer_data/key.npy')
 numtraces = np.shape(traces)[0]-1
 numpoint = np.shape(traces)[1]
 

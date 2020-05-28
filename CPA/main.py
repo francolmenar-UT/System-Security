@@ -1,7 +1,7 @@
 import click
 from pyfiglet import Figlet
 
-from src.CPA import CPA
+from src.CPA.CPA import CPA
 
 
 @click.group()
