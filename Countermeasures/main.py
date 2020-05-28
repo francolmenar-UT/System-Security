@@ -14,20 +14,11 @@ def main():
 
 
 @main.command(help='')
-@click.pass_context
-def all(ctx):
-    """
-    :param ctx: Context need to invoking commands
-    """
-    ctx.invoke(run, key=True)
-    return 0
-
-
-@main.command(help='')
+@click.option('-g', is_flag=True, help='Generates the graphs')
 @click.option('--key', '-k', is_flag=True, help='Generates the RSA keys')
 @click.option('--load', '-l', is_flag=True, help='Loads the RSA keys')
 @click.pass_context
-def run(ctx, key, load):
+def run(ctx, g, key, load):
     """
     # TODO
     """
@@ -39,11 +30,13 @@ def run(ctx, key, load):
             key_list = load_keys()
         if i == 0:
             square_mult(key_list)  # Execute 1
-            print()
         elif i == 1:
             square_mult_alw(key_list)  # Execute 2
+            print()
         elif i == 2:
             square_ladder(key_list)  # Execute 3
+    if g:
+        ctx.invoke(graph)
     return 0
 
 
