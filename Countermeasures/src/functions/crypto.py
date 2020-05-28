@@ -1,9 +1,7 @@
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.backends import default_backend
 import numpy as np
 import pandas as pd
-from src.constants.constants import *
 
+from src.constants.constants import *
 from src.objects.key_object import KeyObject
 
 
@@ -21,28 +19,15 @@ def generate_e():
     return np.delete(x, index)  # Delete the elements which are not odd
 
 
-def generate_key_size():
-    """
-    Generates all the values for the key size value according to the range values
-    :return: Np array with the key size values
-    """
-    # TODO
-    # return np.arange(KEY_SIZE[MIN], KEY_SIZE[MAX], KEY_STEP)  # Creates a np array with the constant values
-    return np.array([KEY_SIZE[MAX]])  # Only one key size
-
-
 def generate_rsa_keys(e_list):
     """
     Generates the RSA keys as a list of KeyObject
     :param e_list: List of exponents to be used
-    :param key_sz_list: List of key sizes to be used
     :return: List with all the KeyObject created
     """
     key_list_aux = []
     for e_i in e_list:
         key_list_aux.append(KeyObject(e=e_i, n=N, msg=MSG))
-        # key_list_aux.append(create_key(np.int32(e_i).item(),  # Create and append the new key
-        #                               np.int32(k_i).item()))
     return key_list_aux
 
 

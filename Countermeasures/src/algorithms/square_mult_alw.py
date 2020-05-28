@@ -13,6 +13,7 @@ def square_mult_alw(key_list):
     for key in key_list:
         # Encryption
         enc_time = run(key.msg, key.e, key.n)
+
         new_key_list.append(key.add_time(enc_time))  # Add new KeyObject with time
     save_results(new_key_list)
     return new_key_list
