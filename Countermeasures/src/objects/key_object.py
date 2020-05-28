@@ -1,6 +1,3 @@
-from random import randrange
-
-
 class KeyObject:
     e = None
     n = None
@@ -26,25 +23,12 @@ class KeyObject:
         self.msg = msg
 
     def create_from_time(self, e, n, msg, enc_time):
-        """
-        # TODO
-        :param e:
-        :param n:
-        :param msg:
-        :param enc_time:
-        :return:
-        """
         self.e = e
         self.n = n
         self.msg = msg
         self.enc_time = enc_time
 
     def add_time(self, new_enc_time):
-        """
-        # TODO
-        :param new_enc_time:
-        :return:
-        """
         return KeyObject(e=self.e, n=self.n,
                          msg=self.msg, enc_time=new_enc_time)
 

@@ -4,11 +4,6 @@ from src.constants.constants import EXE_REP, MULT_LD_FOLDER_PATH, MULT_LD_FILE_P
 
 
 def square_ladder(key_list):
-    """
-    # TODO
-    :param key_list:
-    :return:
-    """
     new_key_list = []
     for key in key_list:
         # Encryption
@@ -20,25 +15,11 @@ def square_ladder(key_list):
 
 
 def run(msg, exponent, n):
-    """
-    #TODO
-    :param msg:
-    :param exponent:
-    :param n:
-    :return:
-    """
     enc_time = timeit.timeit(lambda: exp(msg, exponent, n), number=EXE_REP)
     return enc_time
 
 
 def exp(m, e, n):
-    """
-    # TODO
-    :param m:
-    :param e:
-    :param n:
-    :return:
-    """
     # Assigning initial values
     R0 = 1
     R1 = m

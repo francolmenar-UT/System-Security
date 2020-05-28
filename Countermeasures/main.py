@@ -19,9 +19,6 @@ def main():
 @click.option('--load', '-l', is_flag=True, help='Loads the RSA keys')
 @click.pass_context
 def run(ctx, g, key, load):
-    """
-    # TODO
-    """
     for i in range(0, 3):  # Ran the three algorithms
         key_list = []
         if key:  # Generate the keys
@@ -54,7 +51,7 @@ def keys():
 @main.command(help='Generates the Graphs from the data')
 def graph():
     """
-    Generates the RSA Keys
+    Generates the Graphs
     """
     create_graph()
     return 0
