@@ -10,7 +10,33 @@ def create_graph():
                       MULT_ALW_FOLDER_PATH + MULT_ALW_FILE_PATH,
                       MULT_LD_FOLDER_PATH + MULT_LD_FILE_PATH])
 
-    createPlots(data)
+    for idx, arr in enumerate(data):  # Single graphs
+        createPlots(EXE_COL, EXP_COL, data[idx], LABEL[idx], COLOUR[idx],
+                    X_AXIS, Y_AXIS, POINT_SIZE, NAME[idx], AXIS, GRID_LINESTYLE)
+
+        plt.savefig(IMG_FOLDER_PATH + IMG[idx] + ".png", dpi=600)
+        plt.close()
+
+    for idx, arr in enumerate(data):  # Multiple graphs
+        name = ""
+        name_plt = ""
+        if idx == len(data) - 1:
+            break
+        else:
+            name += IMG_FOLDER_PATH + IMG[idx]
+            name_plt += NAME[idx]
+            createPlots(EXE_COL, EXP_COL, data[idx], LABEL[idx], COLOUR[idx],
+                        X_AXIS, Y_AXIS, POINT_SIZE, NAME[idx], AXIS, GRID_LINESTYLE)
+
+        for i in range(idx + 1, len(data)):  # Each graph prints the comparison with the following ones
+            createPlots(EXE_COL, EXP_COL, data[i], LABEL[i], COLOUR[i],
+                        X_AXIS, Y_AXIS, POINT_SIZE, NAME[i], AXIS, GRID_LINESTYLE)
+
+            name += " & " + IMG[i]
+            name_plt += " & \n" + NAME_AUX[i]
+        plt.title(name_plt)
+        plt.savefig(name + ".png", dpi=600)
+        plt.close()
 
 
 def readfiles(files):
@@ -30,33 +56,24 @@ def readfiles(files):
     return data
 
 
-def createPlots(data):
-    for idx, arr in enumerate(data):  # Single graphs
-        x = data[idx][EXE_COL]
-        y = data[idx][EXP_COL]
+def createPlots(c1, c2, data, label, colour,
+                x_axis, y_axis, point_size, name, axis, grid_linestyle):
+    x = data[c1]
+    y = data[c2]
 
-        x_axis = np.arange(X_AXIS[0], X_AXIS[1], X_AXIS[2])
-        y_axis = np.arange(Y_AXIS[0], Y_AXIS[1], Y_AXIS[2])
+    x_axis = np.arange(x_axis[0], x_axis[1], x_axis[2])
+    y_axis = np.arange(y_axis[0], y_axis[1], y_axis[2])
 
-        plt.plot(x, y, 'o', label=LABEL[idx], markersize=np.sqrt(POINT_SIZE), color=COLOUR[idx])
+    plt.plot(x, y, 'o', label=label, markersize=np.sqrt(point_size), color=colour)
 
-        plt.xticks(x_axis)
-        plt.yticks(y_axis)
+    plt.xticks(x_axis)
+    plt.yticks(y_axis)
 
-        plt.title(NAME[idx])
-        plt.xlabel(AXIS[0])
-        plt.ylabel(AXIS[1])
+    plt.title(name)
+    plt.xlabel(axis[0])
+    plt.ylabel(axis[1])
 
-        lgnd = plt.legend(loc="lower right", numpoints=1, fontsize=10)
-        lgnd.legendHandles[0]._legmarker.set_markersize(6)
+    lgnd = plt.legend(loc="lower right", numpoints=1, fontsize=10)
+    # lgnd.legendHandles[0]._legmarker.set_markersize(4)
 
-        # plt.grid(True)
-
-        plt.grid(True, color=COLOUR[idx], alpha=0.3,  linestyle=GRID_LINESTYLE)
-
-        print(IMG_FOLDER_PATH + IMG[idx] + ".png")
-
-        plt.savefig(IMG_FOLDER_PATH + IMG[idx] + ".png", dpi=600)
-        plt.close()
-
-    
+    plt.grid(True, color=colour, alpha=0.3, linestyle=grid_linestyle)
