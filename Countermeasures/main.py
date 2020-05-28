@@ -38,11 +38,10 @@ def run(ctx, key, load):
         elif load:  # Load the keys
             key_list = load_keys()
         if i == 0:
-            # square_mult(key_list)  # Execute 1
+            square_mult(key_list)  # Execute 1
             print()
         elif i == 1:
-            # square_mult_alw(key_list)  # Execute 2
-            print()
+            square_mult_alw(key_list)  # Execute 2
         elif i == 2:
             square_ladder(key_list)  # Execute 3
     return 0
