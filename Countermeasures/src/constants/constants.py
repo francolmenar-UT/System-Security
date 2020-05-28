@@ -57,6 +57,12 @@ NAME = [
     "Montgomery Ladder Algorithm"
 ]
 
+NAME_AUX = [
+    "Square-and-multiply",
+    "Square-and-multiply Always",
+    "Montgomery Ladder"
+]
+
 AXIS = [
     "Execution time (s)",
     "Exponent value (1e6)"
