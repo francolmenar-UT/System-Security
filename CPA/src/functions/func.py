@@ -32,3 +32,8 @@ def save_result(folder, best_guess, ge, sub_key_amount, num_traces):
             + JOIN +
             NUM_TRACES_STR + str(num_traces) + '.npy', data)
 
+
+def save_data(sub_key_amount, num_traces, data):
+    np.save(ONLINE_CPA_EXE + SUB_KEY_STR + str(sub_key_amount)  # Save the data into file
+            + JOIN +
+            NUM_TRACES_STR + str(num_traces) + '.npy', data)

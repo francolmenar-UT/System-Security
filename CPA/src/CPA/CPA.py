@@ -13,6 +13,8 @@ def calculate_online_cpa(traces, num_traces, hyp, num_point):
     if div != 1.0:
         print("Load data bro")
 
+
+
     # The formula is calculated for all the traces because of the sum -> N
     for trace_i in range(0, num_traces - 1):
         h_i = hyp[trace_i]  # Set it as a variable to ease the reading
@@ -94,7 +96,8 @@ def check_sub_key(num_point, num_traces, plain_txt, sub_key, HW, traces, cpa_out
     Performs all the execution for a sub-key
     """
     # Go through all the different hypothesis
-    data_saving = to_zero(1, 20000)
+    if is_online:
+        data_saving = to_zero(1, 20000)
 
     for k_guess in range(0, SIZE):
 
@@ -111,7 +114,7 @@ def check_sub_key(num_point, num_traces, plain_txt, sub_key, HW, traces, cpa_out
         t_mean = np.mean(traces, axis=0, dtype=np.float64)  # Mean of all points in trace
 
         # For each trace calculate the formula
-        if is_online is True:
+        if is_online:
             cpa_output[k_guess], aux_data_saving = calculate_online_cpa(traces, num_traces, hyp, num_point)
             data_saving = np.vstack((data_saving, aux_data_saving))  # Save the new data received
         else:
@@ -119,11 +122,10 @@ def check_sub_key(num_point, num_traces, plain_txt, sub_key, HW, traces, cpa_out
 
         max_cpa[k_guess] = max(abs(cpa_output[k_guess]))
 
-    data_saving = np.delete(data_saving, 0, axis=0)  # Remove first row of 0s
-    print(data_saving)
-
-
-    print("Save data")
+    if is_online:
+        data_saving = np.delete(data_saving, 0, axis=0)  # Remove first row of 0s
+        save_data(sub_key, num_traces, data_saving)
+    # print(data_saving)
 
     # print(max_cpa[k_guess])
     return max_cpa

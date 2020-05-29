@@ -27,8 +27,9 @@ JOIN = '--'
 
 DATA_FOLDER = "data/"
 
-CPA_FOLDER = "data/CPA/"
-ONLINE_CPA_FOLDER = "data/Online_CPA/"
+CPA_FOLDER = "data/performance/CPA/"
+ONLINE_CPA_FOLDER = "data/performance/Online_CPA/"
+ONLINE_CPA_EXE = "data/online_exe/"
 
 NUM_TRACES = 5  # N
 CPA_N = 5
