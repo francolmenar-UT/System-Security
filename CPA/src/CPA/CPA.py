@@ -54,6 +54,8 @@ def check_sub_key(num_point, num_traces, plain_txt, sub_key, HW, traces, cpa_out
 
 
 def CPA(input_num_traces, input_sub_key_amount):
+    print("CPA Execution: Traces:{} \tSub key:{}".format(input_num_traces, input_sub_key_amount))
+
     # Define the HW variable - Count the number of 1s in each number [0,SIZE]
     HW = [bin(n).count("1") for n in range(0, SIZE)]
 
