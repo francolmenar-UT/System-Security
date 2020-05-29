@@ -48,9 +48,8 @@ def check_sub_key(num_point, num_traces, plain_txt, sub_key, HW, traces, cpa_out
 
         max_cpa[k_guess] = max(abs(cpa_output[k_guess]))
 
-    return max_cpa
-
     # print(max_cpa[k_guess])
+    return max_cpa
 
 
 def CPA(input_num_traces, input_sub_key_amount):
