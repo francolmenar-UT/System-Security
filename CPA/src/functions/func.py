@@ -78,7 +78,7 @@ def save_time(data_list, is_online):
             if idx == SUB_KEY_INDEX:
                 data_str += str(atr) + ','  # Append the data in a csv form
             elif idx == GE_INDEX:
-                data_str += str(atr[int(atr[SUB_KEY_INDEX]) - 1])  # Append the data in a csv form
+                data_str += str(atr[int(data[SUB_KEY_INDEX]) - 1])  # Append the data in a csv form
         data_str += '\n'
 
     output_f.write(data_str)  # Write the processed line to the output text file

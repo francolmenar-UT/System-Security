@@ -40,21 +40,86 @@ ONLINE_CPA_GE = "data/ge/Online_CPA/"
 CPA_PREFIX = "CPA"
 ONLINE_PREFIX = "Online_CPA"
 
-NUM_TRACES = 5  # N
-CPA_N = 5
+NUM_TRACES = 1  # N
+# NUM_TRACES = 10  # N
+CPA_N = 10
 
 SIZE = 256
 SUB_KEY_AMOUNT = 2  # Amount the sub-keys used
+# SUB_KEY_AMOUNT = 1  # Amount the sub-keys used
 K_GUESS_AMOUNT = 10
 
 NP_SIZE = 20000
 
 DEBUG = False
 
-EXE_REP = 1
+# EXE_REP = 1
+EXE_REP = 5
 
 SUB_KEY_INDEX = 0
 TRACES_INDEX = 1
 EXE_TIME_INDEX = 2
 BEST_GUESS_INDEX = 3
 GE_INDEX = 4
+
+COL_TIMING = ["Sub-key",
+              "Execution time"]
+
+COL_GE = ["Sub-key",
+          "Guessing Entropy"]
+
+LABEL = [
+    "CPA",
+    "Online CPA"]
+
+COLOUR = [
+    "tab:blue",
+    "tab:orange"]
+
+TIMING_AXIS = [
+    [0, 5, 1],
+    [0.0, 4, 0.5]]
+
+TIMING_AXIS_NM = [
+    "Sub-keys",
+    "Execution time (s)"
+]
+
+GE_AXIS_NM = [
+    "Sub-keys",
+    "Guessing entropy"
+]
+
+GE_AXIS = [
+    [0, 4, 1],
+    [0.0, 300.0, 75]
+]
+
+POINT_SIZE = [3,
+              3]
+POINT_SIZE_LEGEND = 3
+
+NAME = [
+    "CPA",
+    "Online CPA"]
+
+NAME_AUX = [
+    "CPA",
+    "Online CPA"
+]
+
+GRID_COLOUR = '#cfe0e8'
+GRID_LINESTYLE = '--'
+
+IMG_FOLDER_PATH = "img/"
+
+IMG = [
+    "CPA",
+    "Online_CPA"
+]
+
+TIMING_PREFIX = "TM"
+GE_PREFIX = "GE"
+
+GE_POINTS = False
+TM_POINTS = True
