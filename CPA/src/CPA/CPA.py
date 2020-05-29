@@ -1,27 +1,85 @@
 from src.functions.func import *
+from pathlib import Path
 import numpy as np
 
 
-def calculate_online_cpa(traces, num_traces, hyp, num_point):
+def calculate_online_cpa(traces, num_traces, hyp, num_point, sub_key, k_guess):
     [num_sum_1, num_sum_2, num_sum_3,
      den_sum_1, den_sum_2, den_sum_3, den_sum_4] = to_zero(7, num_point)
 
+    # print(k_guess)
+
     data_saving = np.array([])
+    data_to_use = np.array([])
+
+    beginning = 0
 
     div = num_traces / CPA_N
 
     if div != 1.0:
-        print("Load data bro")
+        prev_trace = num_traces - CPA_N
+        file_name = ONLINE_CPA_EXE + SUB_KEY_STR + str(sub_key) \
+                    + JOIN + \
+                    NUM_TRACES_STR + str(prev_trace) + '.npy'
+
+        data_file = Path(file_name)
+        if data_file.is_file():
+            data_to_use = read_np([file_name])  # Read data
+            beginning = prev_trace  # Change the starting number for the index
+
+            # print(data_to_use[0][9][0:5000])
+            # print(data_to_use[0][9][5000:10000])
+            # print(data_to_use[0][9][10000:15000])
+            # print(data_to_use[0][9][15000:20000])
+
+            num_sum_2 = data_to_use[0][k_guess][0:5000]
+            num_sum_3 = data_to_use[0][k_guess][5000:10000]
+            den_sum_2 = data_to_use[0][k_guess][10000:15000]
+            den_sum_4 = data_to_use[0][k_guess][15000:20000]
+
+            # if k_guess == 1:
+            # print("-----------------")
+            # print(num_sum_2)
+            # print(num_sum_3)
+            # print(den_sum_2)
+            # print(den_sum_4)
+            # print("-----------------")
 
 
+        else:
+            print("ERROR: No file for reading the data.")
+            return -1
 
-    # The formula is calculated for all the traces because of the sum -> N
-    for trace_i in range(0, num_traces - 1):
+    # file exists
+
+    for trace_i in range(0, beginning):
+
         h_i = hyp[trace_i]  # Set it as a variable to ease the reading
         t_i = traces[trace_i, :]
 
         # Numerator
         num_sum_1 = num_sum_1 + (h_i * t_i)
+
+        # Left part of the Denominator
+        den_sum_1 = den_sum_1 + h_i
+
+        # Right part of the Denominator
+        den_sum_3 = den_sum_3 + t_i
+
+    # The formula is calculated for all the traces because of the sum -> N
+    for trace_i in range(beginning, num_traces - 1):
+
+        h_i = hyp[trace_i]  # Set it as a variable to ease the reading
+        t_i = traces[trace_i, :]
+
+        # Numerator
+        num_sum_1 = num_sum_1 + (h_i * t_i)
+
+        # if trace_i == 5 and k_guess == 0:
+           #print("****************")
+           #print(num_sum_1)
+           #print("****************")
+
         num_sum_2 = num_sum_2 + h_i
         num_sum_3 = num_sum_3 + t_i
 
@@ -49,6 +107,9 @@ def calculate_online_cpa(traces, num_traces, hyp, num_point):
         # Left part of the Denominator
         den_sum_1 = den_sum_1 + h_i
         den_sum_2 = den_sum_2 + (h_i * h_i)
+
+        # print(den_sum_2)
+
         data_saving = np.concatenate([data_saving, den_sum_2])  # Sum of the square of h the third element
 
         # Right part of the Denominator
@@ -56,8 +117,20 @@ def calculate_online_cpa(traces, num_traces, hyp, num_point):
         den_sum_4 = den_sum_4 + t_i * t_i
         data_saving = np.concatenate([data_saving, den_sum_4])  # Sum of the square of m the forth element
 
+    # print(k_guess)
+    # if k_guess == 0:
+       #print("-----------------")
+       #print(num_sum_2)
+       #print(num_sum_3)
+       #print(den_sum_2)
+       #print(den_sum_4)
+       #print("-----------------")
+
     # Numerator
     num_result = (num_traces * num_sum_1) - (num_sum_2 * num_sum_3)  # Result of the numerator
+
+    # if k_guess == 0:
+       #print(num_sum_1)
 
     # Left part of the Denominator
     den_sum_1 = den_sum_1 * den_sum_1  # Square the first sum of the denominator
@@ -67,11 +140,14 @@ def calculate_online_cpa(traces, num_traces, hyp, num_point):
     den_sum_3 = den_sum_3 * den_sum_3
     right_den = den_sum_3 - num_traces * den_sum_4
 
-    result = num_result / np.sqrt(left_den * right_den)
+    # if k_guess == 0:
+       #print("++++++++++++++++++")
+       #print(num_result / np.sqrt(left_den * right_den))
+       #print("++++++++++++++++++")
 
-    # print(data_saving)
+        # print(data_saving)
 
-    return result, data_saving  # Calculate the output online cpa value
+    return num_result / np.sqrt(left_den * right_den), data_saving  # Calculate the output online cpa value
 
 
 def calculate_cpa(traces, num_traces, hyp, h_mean, t_mean, num_point):
@@ -99,7 +175,7 @@ def check_sub_key(num_point, num_traces, plain_txt, sub_key, HW, traces, cpa_out
     if is_online:
         data_saving = to_zero(1, 20000)
 
-    for k_guess in range(0, SIZE):
+    for k_guess in range(0, 10):
 
         # print("Subkey %2d, hyp = %02x: " % (sub_key, k_guess)),
 
@@ -115,7 +191,9 @@ def check_sub_key(num_point, num_traces, plain_txt, sub_key, HW, traces, cpa_out
 
         # For each trace calculate the formula
         if is_online:
-            cpa_output[k_guess], aux_data_saving = calculate_online_cpa(traces, num_traces, hyp, num_point)
+            cpa_output[k_guess], aux_data_saving = calculate_online_cpa(
+                traces, num_traces, hyp, num_point, sub_key, k_guess)
+
             data_saving = np.vstack((data_saving, aux_data_saving))  # Save the new data received
         else:
             cpa_output[k_guess] = calculate_cpa(traces, num_traces, hyp, h_mean, t_mean, num_point)
@@ -124,8 +202,13 @@ def check_sub_key(num_point, num_traces, plain_txt, sub_key, HW, traces, cpa_out
 
     if is_online:
         data_saving = np.delete(data_saving, 0, axis=0)  # Remove first row of 0s
+        # print("+++++++++++++++++")
+        # print(data_saving[0][0:5000])
+        # print(data_saving[0][5000:10000])
+        # print(data_saving[0][10000:15000])
+        # print(data_saving[0][15000:20000])
+        # print("+++++++++++++++++")
         save_data(sub_key, num_traces, data_saving)
-    # print(data_saving)
 
     # print(max_cpa[k_guess])
     return max_cpa
