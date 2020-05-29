@@ -35,4 +35,6 @@ NUM_TRACES = 5  # N
 CPA_N = 5
 
 SIZE = 256
-SUB_KEY_AMOUNT = 1  # Amount the sub-keys used
+SUB_KEY_AMOUNT = 2  # Amount the sub-keys used
+
+NP_SIZE = 20000
