@@ -1,3 +1,5 @@
 venv/
 doc/
 .idea
+
+data/chipwhisperer_data/traces.npy
