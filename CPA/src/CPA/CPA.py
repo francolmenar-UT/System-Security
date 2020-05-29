@@ -1,6 +1,7 @@
 from src.functions.func import *
 from pathlib import Path
 import numpy as np
+import timeit
 
 
 def calculate_online_cpa(traces, num_traces, hyp, num_point, sub_key, k_guess):
@@ -132,7 +133,7 @@ def check_sub_key(num_point, num_traces, plain_txt, sub_key, HW, traces, cpa_out
     if is_online:
         data_saving = to_zero(1, 20000)
 
-    for k_guess in range(0, 10):
+    for k_guess in range(0, K_GUESS_AMOUNT):
 
         # print("Subkey %2d, hyp = %02x: " % (sub_key, k_guess)),
 
@@ -165,16 +166,38 @@ def check_sub_key(num_point, num_traces, plain_txt, sub_key, HW, traces, cpa_out
     return max_cpa
 
 
+def run_cpu(num_point, num_traces, plain_txt, HW, traces, is_online, best_guess, ge, known_key, input_sub_key_amount):
+    for sub_key in range(0, input_sub_key_amount):  # Set just for the first sub-key
+        cpa_output = [0] * SIZE  # Each entry for each different hypothesis
+        max_cpa = [0] * SIZE  # To zero
+
+        # Go through all the different hypothesis
+
+        max_cpa = check_sub_key(num_point, num_traces, plain_txt, sub_key, HW, traces, cpa_output, max_cpa, is_online)
+
+        # Get the best guess
+        best_guess[sub_key] = np.argmax(max_cpa)
+
+        # Sort max_cpa
+        cpa_refs = np.argsort(max_cpa)[::-1]
+
+        # Find GE accessing to the known key
+        ge[sub_key] = list(cpa_refs).index(known_key[0][sub_key])
+    return best_guess, ge
+
+
 def cpa(input_num_traces, input_sub_key_amount, is_online):
-    if is_online is True:
-        print("Online CPA Execution: Traces:{} \tSub key:{}".format(input_num_traces, input_sub_key_amount))
+    if is_online:
+        if DEBUG:
+            print("Online CPA Execution: Traces:{} \tSub key:{}".format(input_num_traces, input_sub_key_amount))
         save_folder = ONLINE_CPA_FOLDER
 
         if not input_num_traces / CPA_N >= 1 or not input_num_traces % CPA_N == 0:
             print("Incorrect number of traces for online CPA, check CPA_N in constants.py")
             return -1
     else:
-        print("CPA Execution: Traces:{} \tSub key:{}".format(input_num_traces, input_sub_key_amount))
+        if DEBUG:
+            print("CPA Execution: Traces:{} \tSub key:{}".format(input_num_traces, input_sub_key_amount))
         save_folder = CPA_FOLDER
 
     # Define the HW variable - Count the number of 1s in each number [0,SIZE]
@@ -194,24 +217,12 @@ def cpa(input_num_traces, input_sub_key_amount, is_online):
     best_guess = [0] * input_sub_key_amount  # Set to zeros
     ge = np.zeros(input_sub_key_amount)
 
-    for sub_key in range(0, input_sub_key_amount):  # Set just for the first sub-key
-        cpa_output = [0] * SIZE  # Each entry for each different hypothesis
-        max_cpa = [0] * SIZE  # To zero
+    best_guess, ge = run_cpu(num_point, num_traces, plain_txt, HW,
+                             traces, is_online, best_guess, ge, known_key,
+                             input_sub_key_amount)
 
-        # Go through all the different hypothesis
-
-        max_cpa = check_sub_key(num_point, num_traces, plain_txt, sub_key, HW, traces, cpa_output, max_cpa, is_online)
-
-        # Get the best guess
-        best_guess[sub_key] = np.argmax(max_cpa)
-
-        # Sort max_cpa
-        cpa_refs = np.argsort(max_cpa)[::-1]
-
-        # Find GE accessing to the known key
-        ge[sub_key] = list(cpa_refs).index(known_key[0][sub_key])  # TODO I don't know why that 0
-
-    print_result(best_guess, ge)
+    if DEBUG:
+        print_result(best_guess, ge)
     save_result(save_folder, best_guess, ge, input_sub_key_amount, num_traces)
 
-    return 0
+    return best_guess, ge

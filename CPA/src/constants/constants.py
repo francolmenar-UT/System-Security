@@ -27,14 +27,34 @@ JOIN = '--'
 
 DATA_FOLDER = "data/"
 
-CPA_FOLDER = "data/performance/CPA/"
-ONLINE_CPA_FOLDER = "data/performance/Online_CPA/"
-ONLINE_CPA_EXE = "data/online_exe/"
+CPA_FOLDER = "data/raw_data/CPA/"
+ONLINE_CPA_FOLDER = "data/raw_data/Online_CPA/"
+ONLINE_CPA_EXE = "data/saved_data/"
+
+CPA_TIMING = "data/timing/CPA/"
+ONLINE_CPA_TIMING = "data/timing/Online_CPA/"
+
+CPA_GE = "data/ge/CPA/"
+ONLINE_CPA_GE = "data/ge/Online_CPA/"
+
+CPA_PREFIX = "CPA"
+ONLINE_PREFIX = "Online_CPA"
 
 NUM_TRACES = 5  # N
 CPA_N = 5
 
 SIZE = 256
 SUB_KEY_AMOUNT = 2  # Amount the sub-keys used
+K_GUESS_AMOUNT = 10
 
 NP_SIZE = 20000
+
+DEBUG = False
+
+EXE_REP = 1
+
+SUB_KEY_INDEX = 0
+TRACES_INDEX = 1
+EXE_TIME_INDEX = 2
+BEST_GUESS_INDEX = 3
+GE_INDEX = 4
