@@ -1,14 +1,46 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Mar  4 02:08:22 2020
-
-@author: stjepan
-"""
-
 from src.functions.CPA_func import *
 
 
-def calculate_formula(traces, num_traces, hyp, h_mean, t_mean, sum_num, sum_den_1, sum_den_2):
+def calculate_online_cpa(traces, num_traces, hyp, num_point):
+    [num_sum_1, num_sum_2, num_sum_3,
+     den_sum_1, den_sum_2, den_sum_3, den_sum_4] = to_zero(7, num_point)
+
+    # The formula is calculated for all the traces because of the sum -> N
+    for trace_i in range(0, num_traces):
+        h_i = hyp[trace_i]  # Set it as a variable to ease the reading
+        t_i = traces[trace_i, :]
+
+        # Numerator
+        num_sum_1 = num_sum_1 + (h_i * t_i)
+        num_sum_2 = num_sum_2 + h_i
+        num_sum_3 = num_sum_3 + t_i
+
+        # Left part of the Denominator
+        den_sum_1 = den_sum_1 + h_i
+        den_sum_2 = den_sum_2 + (h_i * h_i)
+
+        # Right part of the Denominator
+        den_sum_3 = den_sum_3 + t_i
+        den_sum_4 = den_sum_4 + t_i * t_i
+
+    # Numerator
+    num_result = (num_traces * num_sum_1) - (num_sum_2 * num_sum_3)  # Result of the numerator
+
+    # Left part of the Denominator
+    den_sum_1 = den_sum_1 * den_sum_1  # Square the first sum of the denominator
+    left_den = den_sum_1 - num_traces * den_sum_2  # Calculate left part of the denominator
+
+    # Right part of the Denominator
+    den_sum_3 = den_sum_3 * den_sum_3
+    right_den = den_sum_3 - num_traces * den_sum_4
+
+    return num_result / np.sqrt(left_den * right_den)  # Calculate the output online cpa value
+
+
+def calculate_cpa(traces, num_traces, hyp, h_mean, t_mean, num_point):
+    # Set to zeros according to the total number of traces -> N
+    [sum_num, sum_den_1, sum_den_2] = to_zero(3, num_point)
+
     # The formula is calculated for all the traces because of the sum -> N
     for trace_i in range(0, num_traces):  # TODO Now this is set to less
         h_diff = (hyp[trace_i] - h_mean)  # Difference of hypothesis value
@@ -22,7 +54,7 @@ def calculate_formula(traces, num_traces, hyp, h_mean, t_mean, sum_num, sum_den_
 
 
 # Go through all the different hypothesis
-def check_sub_key(num_point, num_traces, plain_txt, sub_key, HW, traces, cpa_output, max_cpa):
+def check_sub_key(num_point, num_traces, plain_txt, sub_key, HW, traces, cpa_output, max_cpa, is_online):
     """
     Performs all the execution for a sub-key
     """
@@ -30,13 +62,10 @@ def check_sub_key(num_point, num_traces, plain_txt, sub_key, HW, traces, cpa_out
     for k_guess in range(0, SIZE):
         # print("Subkey %2d, hyp = %02x: " % (sub_key, k_guess)),
 
-        # Set to zeros according to the total number of traces -> N
-        [sum_num, sum_den_1, sum_den_2] = to_zero(3, num_point)
-
         hyp = np.zeros(num_traces)  # Set to zeros
 
         # Get the hypothesis for the trace
-        for trace_i in range(0, num_traces):  # TODO No idea why
+        for trace_i in range(0, num_traces):  
             sbox_output = intermediate(plain_txt[trace_i][sub_key], k_guess)  # Get the sbox output
             hyp[trace_i] = HW[sbox_output]  # Get the amount of 1s of the integer from the output of the sbox
 
@@ -44,7 +73,10 @@ def check_sub_key(num_point, num_traces, plain_txt, sub_key, HW, traces, cpa_out
         t_mean = np.mean(traces, axis=0, dtype=np.float64)  # Mean of all points in trace
 
         # For each trace calculate the formula
-        cpa_output[k_guess] = calculate_formula(traces, num_traces, hyp, h_mean, t_mean, sum_num, sum_den_1, sum_den_2)
+        if is_online is True:
+            cpa_output[k_guess] = calculate_online_cpa(traces, num_traces, hyp, num_point)
+        else:
+            cpa_output[k_guess] = calculate_cpa(traces, num_traces, hyp, h_mean, t_mean, num_point)
 
         max_cpa[k_guess] = max(abs(cpa_output[k_guess]))
 
@@ -52,8 +84,17 @@ def check_sub_key(num_point, num_traces, plain_txt, sub_key, HW, traces, cpa_out
     return max_cpa
 
 
-def CPA(input_num_traces, input_sub_key_amount):
-    print("CPA Execution: Traces:{} \tSub key:{}".format(input_num_traces, input_sub_key_amount))
+def cpa(input_num_traces, input_sub_key_amount, is_online):
+    if is_online is True:
+        print("Online CPA Execution: Traces:{} \tSub key:{}".format(input_num_traces, input_sub_key_amount))
+        save_folder = ONLINE_CPA_FOLDER
+
+        if not input_num_traces / CPA_N >=1  or not input_num_traces % CPA_N == 0:
+            print("Incorrect number of traces for online CPA, check CPA_N in constants.py")
+            return -1
+    else:
+        print("CPA Execution: Traces:{} \tSub key:{}".format(input_num_traces, input_sub_key_amount))
+        save_folder = CPA_FOLDER
 
     # Define the HW variable - Count the number of 1s in each number [0,SIZE]
     HW = [bin(n).count("1") for n in range(0, SIZE)]
@@ -77,7 +118,8 @@ def CPA(input_num_traces, input_sub_key_amount):
         max_cpa = [0] * SIZE  # To zero
 
         # Go through all the different hypothesis
-        max_cpa = check_sub_key(num_point, num_traces, plain_txt, sub_key, HW, traces, cpa_output, max_cpa)
+
+        max_cpa = check_sub_key(num_point, num_traces, plain_txt, sub_key, HW, traces, cpa_output, max_cpa, is_online)
 
         # Get the best guess
         best_guess[sub_key] = np.argmax(max_cpa)
@@ -89,6 +131,6 @@ def CPA(input_num_traces, input_sub_key_amount):
         ge[sub_key] = list(cpa_refs).index(known_key[0][sub_key])  # TODO I don't know why that 0
 
     print_result(best_guess, ge)
-    save_result(CPA_FOLDER, best_guess, ge, input_sub_key_amount, num_traces)
+    save_result(save_folder, best_guess, ge, input_sub_key_amount, num_traces)
 
     return 0

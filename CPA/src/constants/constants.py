@@ -31,6 +31,7 @@ CPA_FOLDER = "data/CPA/"
 ONLINE_CPA_FOLDER = "data/Online_CPA/"
 
 NUM_TRACES = 5  # N
+CPA_N = 5
 
 SIZE = 256
 SUB_KEY_AMOUNT = 1  # Amount the sub-keys used

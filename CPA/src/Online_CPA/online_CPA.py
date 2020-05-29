@@ -1,40 +1,7 @@
 from src.functions.CPA_func import *
 
 
-def calculate_online_cpa(traces, num_traces, hyp, h_mean, t_mean, sum_num, sum_den_1, sum_den_2, num_point):
-    [num_sum_1, num_sum_2, num_sum_3,
-     den_sum_1, den_sum_2, den_sum_3, den_sum_4] = to_zero(7, num_point)
 
-    # The formula is calculated for all the traces because of the sum -> N
-    for trace_i in range(0, num_traces):
-        h_i = hyp[trace_i]  # Set it as a variable to ease the reading
-        t_i = traces[trace_i, :]
-
-        # Numerator
-        num_sum_1 = num_sum_1 + (h_i * t_i)
-        num_sum_2 = num_sum_2 + h_i
-        num_sum_3 = num_sum_3 + t_i
-
-        # Left part of the Denominator
-        den_sum_1 = den_sum_1 + h_i
-        den_sum_2 = den_sum_2 + (h_i * h_i)
-
-        # Right part of the Denominator
-        den_sum_3 = den_sum_3 + t_i
-        den_sum_4 = den_sum_4 + t_i * t_i
-
-    # Numerator
-    num_result = (num_traces * num_sum_1) - (num_sum_2 * num_sum_3)  # Result of the numerator
-
-    # Left part of the Denominator
-    den_sum_1 = den_sum_1 * den_sum_1  # Square the first sum of the denominator
-    left_den = den_sum_1 - num_traces * den_sum_2  # Calculate left part of the denominator
-
-    # Right part of the Denominator
-    den_sum_3 = den_sum_3 * den_sum_3
-    right_den = den_sum_3 - num_traces * den_sum_4
-
-    return num_result / np.sqrt(left_den * right_den)  # Calculate the output online cpa value
 
 
 # Go through all the different hypothesis
@@ -60,9 +27,7 @@ def check_sub_key(num_point, num_traces, plain_txt, sub_key, HW, traces, cpa_out
         t_mean = np.mean(traces, axis=0, dtype=np.float64)  # Mean of all points in trace
 
         # For each trace calculate the formula
-        cpa_output[k_guess] = calculate_online_cpa(traces, num_traces, hyp, h_mean, t_mean,
-                                                   sum_num, sum_den_1, sum_den_2,
-                                                   num_point)
+        cpa_output[k_guess] = calculate_online_cpa(traces, num_traces, hyp, num_point)
 
         max_cpa[k_guess] = max(abs(cpa_output[k_guess]))
 
