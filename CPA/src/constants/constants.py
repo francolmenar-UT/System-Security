@@ -30,7 +30,7 @@ DATA_FOLDER = "data/"
 CPA_FOLDER = "data/CPA/"
 ONLINE_CPA_FOLDER = "data/Online_CPA/"
 
-NUM_TRACES = 10  # N
+NUM_TRACES = 5  # N
 
 SIZE = 256
 SUB_KEY_AMOUNT = 1  # Amount the sub-keys used
