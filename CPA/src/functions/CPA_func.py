@@ -24,3 +24,10 @@ def to_zero(index, length):
     for i in range(0, index):
         result.append(np.zeros(length))
     return result
+
+
+def save_result(folder, best_guess, ge, sub_key_amount, num_traces):
+    data = np.array([best_guess, ge])  # Create np array
+    np.save(folder + SUB_KEY_STR + str(sub_key_amount)  # Save the data into file
+            + JOIN +
+            NUM_TRACES_STR + str(num_traces) + '.npy', data)

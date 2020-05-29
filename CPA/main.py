@@ -1,5 +1,6 @@
 import click
 from pyfiglet import Figlet
+from src.constants.constants import *
 
 from src.CPA.CPA import CPA
 
@@ -11,7 +12,10 @@ def main():
 
 @main.command(help='')
 def run():
-    CPA()
+    for i in range(1, 10):
+        for j in range(1, 4):
+            print("Execution: {}-{}".format(i, j))
+            CPA(i, j * 5)
     return 0
 
 

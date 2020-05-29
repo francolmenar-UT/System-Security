@@ -21,7 +21,16 @@ TRACES = 'traces.npy'
 PLAIN = 'plain.npy'
 KEY = 'key.npy'
 
-NUM_TRACES = 22
+SUB_KEY_STR = 'sub_key:'
+NUM_TRACES_STR = 'num_traces:'
+JOIN = '--'
+
+DATA_FOLDER = "data/"
+
+CPA_FOLDER = "data/CPA/"
+ONLINE_CPA_FOLDER = "data/Online_CPA/"
+
+NUM_TRACES = 10  # N
 
 SIZE = 256
-SUB_KEY_AMOUNT = 16
+SUB_KEY_AMOUNT = 1  # Amount the sub-keys used

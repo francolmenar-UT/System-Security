@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Mar  4 02:08:22 2020
-
-@author: stjepan
-"""
-
 from src.functions.CPA_func import *
 
 
@@ -53,7 +46,7 @@ def check_sub_key(num_point, num_traces, plain_txt, sub_key, HW, traces, cpa_out
     # print(max_cpa[k_guess])
 
 
-def CPA(input_num_traces, input_sub_key_amount):
+def CPA():
     # Define the HW variable - Count the number of 1s in each number [0,SIZE]
     HW = [bin(n).count("1") for n in range(0, SIZE)]
 
@@ -65,13 +58,13 @@ def CPA(input_num_traces, input_sub_key_amount):
     num_point = np.shape(traces)[1]  # -> z data points
 
     # Use less than the maximum traces by setting num_traces to something  # TODO
-    num_traces = input_num_traces  # Set for Testing purposes -> N measurements
+    num_traces = NUM_TRACES  # Set for Testing purposes -> N measurements
 
     # Set 16 to something lower (like 1) to only go through a single sub-key  # TODO
-    best_guess = [0] * input_sub_key_amount  # Set to zeros
-    ge = np.zeros(input_sub_key_amount)
+    best_guess = [0] * SUB_KEY_AMOUNT  # Set to zeros
+    ge = np.zeros(SUB_KEY_AMOUNT)
 
-    for sub_key in range(0, input_sub_key_amount):  # Set just for the first sub-key
+    for sub_key in range(0, 1):  # Set just for the first sub-key
         cpa_output = [0] * SIZE  # Each entry for each different hypothesis
         max_cpa = [0] * SIZE  # To zero
 
@@ -88,6 +81,5 @@ def CPA(input_num_traces, input_sub_key_amount):
         ge[sub_key] = list(cpa_refs).index(known_key[0][sub_key])  # TODO I don't know why that 0
 
     print_result(best_guess, ge)
-    save_result(CPA_FOLDER, best_guess, ge, input_sub_key_amount, num_traces)
 
     return 0
