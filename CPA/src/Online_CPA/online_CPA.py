@@ -7,18 +7,21 @@ def calculate_formula(traces, num_traces, hyp, h_mean, t_mean, sum_num, sum_den_
 
     ####################################### New Formula  ######################################
     for trace_i in range(0, num_traces):
+        h_i = hyp[trace_i]
+        t_i = traces[trace_i, :]
+
         # Numerator
-        num_sum_1 = (num_sum_1 + (hyp[trace_i] * traces[trace_i, :]))
-        num_sum_2 = (num_sum_2 + hyp[trace_i])
-        num_sum_3 = (num_sum_3 + traces[trace_i, :])
+        num_sum_1 = (num_sum_1 + (h_i * t_i))
+        num_sum_2 = (num_sum_2 + h_i)
+        num_sum_3 = (num_sum_3 + t_i)
 
         # Left part of the Denominator
-        den_sum_1 = (den_sum_1 + hyp[trace_i])
-        den_sum_2 = (den_sum_2 + (hyp[trace_i] * hyp[trace_i]))
+        den_sum_1 = (den_sum_1 + h_i)
+        den_sum_2 = (den_sum_2 + (h_i * h_i))
 
         # Right part of the Denominator
-        den_sum_3 = (den_sum_3 + traces[trace_i, :])
-        den_sum_4 = den_sum_4 + traces[trace_i, :] * traces[trace_i, :]
+        den_sum_3 = (den_sum_3 + t_i)
+        den_sum_4 = den_sum_4 + t_i * t_i
 
     ############## Outside the sums ##############
 
@@ -37,8 +40,11 @@ def calculate_formula(traces, num_traces, hyp, h_mean, t_mean, sum_num, sum_den_
 
     ####################################### Old Formula ######################################
     for trace_i in range(0, num_traces):
-        h_diff = (hyp[trace_i] - h_mean)  # Difference of hypothesis value
-        t_diff = traces[trace_i, :] - t_mean  # Difference of traces value
+        h_i = hyp[trace_i]
+        t_i = traces[trace_i, :]
+
+        h_diff = (h_i - h_mean)  # Difference of hypothesis value
+        t_diff = t_i - t_mean  # Difference of traces value
 
         sum_num = sum_num + (h_diff * t_diff)  # Sum of the numerator
         sum_den_1 = sum_den_1 + h_diff * h_diff  # Left Sum of the denominator
@@ -46,7 +52,7 @@ def calculate_formula(traces, num_traces, hyp, h_mean, t_mean, sum_num, sum_den_
 
     ############## Outside the sums ##############
 
-    fraction_result = sum_num / np.sqrt(sum_den_1 * sum_den_2)
+    original_result = sum_num / np.sqrt(sum_den_1 * sum_den_2)
 
     ############## Prints ##############
 
@@ -59,8 +65,8 @@ def calculate_formula(traces, num_traces, hyp, h_mean, t_mean, sum_num, sum_den_
     # print(right_den)
     # print(sum_den_2)
 
-    print(new_result)
-    print(fraction_result)
+    # print(new_result)
+    # print(original_result)
 
     return new_result  # Calculate the output online cpa value
 
