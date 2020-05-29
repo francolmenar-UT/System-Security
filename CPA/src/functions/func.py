@@ -31,3 +31,4 @@ def save_result(folder, best_guess, ge, sub_key_amount, num_traces):
     np.save(folder + SUB_KEY_STR + str(sub_key_amount)  # Save the data into file
             + JOIN +
             NUM_TRACES_STR + str(num_traces) + '.npy', data)
+

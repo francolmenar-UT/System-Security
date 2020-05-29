@@ -1,12 +1,20 @@
-from src.functions.CPA_func import *
+from src.functions.func import *
+import numpy as np
 
 
 def calculate_online_cpa(traces, num_traces, hyp, num_point):
     [num_sum_1, num_sum_2, num_sum_3,
      den_sum_1, den_sum_2, den_sum_3, den_sum_4] = to_zero(7, num_point)
 
+    data_saving = np.array([])
+
+    div = num_traces / CPA_N
+
+    if div != 1.0:
+        print("Load data bro")
+
     # The formula is calculated for all the traces because of the sum -> N
-    for trace_i in range(0, num_traces):
+    for trace_i in range(0, num_traces - 1):
         h_i = hyp[trace_i]  # Set it as a variable to ease the reading
         t_i = traces[trace_i, :]
 
@@ -23,6 +31,29 @@ def calculate_online_cpa(traces, num_traces, hyp, num_point):
         den_sum_3 = den_sum_3 + t_i
         den_sum_4 = den_sum_4 + t_i * t_i
 
+    # Loop saving the data
+    for trace_i in range(num_traces - 1, num_traces):
+        h_i = hyp[trace_i]  # Set it as a variable to ease the reading
+        t_i = traces[trace_i, :]
+
+        # Numerator
+        num_sum_1 = num_sum_1 + (h_i * t_i)
+        num_sum_2 = num_sum_2 + h_i
+        num_sum_3 = num_sum_3 + t_i
+
+        data_saving = np.concatenate([data_saving, num_sum_2], axis=0)  # Sum of h the first element
+        data_saving = np.concatenate([data_saving, num_sum_3])  # Sum of m the second element
+
+        # Left part of the Denominator
+        den_sum_1 = den_sum_1 + h_i
+        den_sum_2 = den_sum_2 + (h_i * h_i)
+        data_saving = np.concatenate([data_saving, den_sum_2])  # Sum of the square of h the third element
+
+        # Right part of the Denominator
+        den_sum_3 = den_sum_3 + t_i
+        den_sum_4 = den_sum_4 + t_i * t_i
+        data_saving = np.concatenate([data_saving, den_sum_4])  # Sum of the square of m the forth element
+
     # Numerator
     num_result = (num_traces * num_sum_1) - (num_sum_2 * num_sum_3)  # Result of the numerator
 
@@ -34,7 +65,11 @@ def calculate_online_cpa(traces, num_traces, hyp, num_point):
     den_sum_3 = den_sum_3 * den_sum_3
     right_den = den_sum_3 - num_traces * den_sum_4
 
-    return num_result / np.sqrt(left_den * right_den)  # Calculate the output online cpa value
+    result = num_result / np.sqrt(left_den * right_den)
+
+    # print(data_saving)
+
+    return result, data_saving  # Calculate the output online cpa value
 
 
 def calculate_cpa(traces, num_traces, hyp, h_mean, t_mean, num_point):
@@ -59,13 +94,16 @@ def check_sub_key(num_point, num_traces, plain_txt, sub_key, HW, traces, cpa_out
     Performs all the execution for a sub-key
     """
     # Go through all the different hypothesis
+    data_saving = to_zero(1, 20000)
+
     for k_guess in range(0, SIZE):
+
         # print("Subkey %2d, hyp = %02x: " % (sub_key, k_guess)),
 
         hyp = np.zeros(num_traces)  # Set to zeros
 
         # Get the hypothesis for the trace
-        for trace_i in range(0, num_traces):  
+        for trace_i in range(0, num_traces):
             sbox_output = intermediate(plain_txt[trace_i][sub_key], k_guess)  # Get the sbox output
             hyp[trace_i] = HW[sbox_output]  # Get the amount of 1s of the integer from the output of the sbox
 
@@ -74,11 +112,18 @@ def check_sub_key(num_point, num_traces, plain_txt, sub_key, HW, traces, cpa_out
 
         # For each trace calculate the formula
         if is_online is True:
-            cpa_output[k_guess] = calculate_online_cpa(traces, num_traces, hyp, num_point)
+            cpa_output[k_guess], aux_data_saving = calculate_online_cpa(traces, num_traces, hyp, num_point)
+            data_saving = np.vstack((data_saving, aux_data_saving))  # Save the new data received
         else:
             cpa_output[k_guess] = calculate_cpa(traces, num_traces, hyp, h_mean, t_mean, num_point)
 
         max_cpa[k_guess] = max(abs(cpa_output[k_guess]))
+
+    data_saving = np.delete(data_saving, 0, axis=0)  # Remove first row of 0s
+    print(data_saving)
+
+
+    print("Save data")
 
     # print(max_cpa[k_guess])
     return max_cpa
@@ -89,7 +134,7 @@ def cpa(input_num_traces, input_sub_key_amount, is_online):
         print("Online CPA Execution: Traces:{} \tSub key:{}".format(input_num_traces, input_sub_key_amount))
         save_folder = ONLINE_CPA_FOLDER
 
-        if not input_num_traces / CPA_N >=1  or not input_num_traces % CPA_N == 0:
+        if not input_num_traces / CPA_N >= 1 or not input_num_traces % CPA_N == 0:
             print("Incorrect number of traces for online CPA, check CPA_N in constants.py")
             return -1
     else:
