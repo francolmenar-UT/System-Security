@@ -1,0 +1,595 @@
+filename
+Content-Type
+Content-Length
+Authorization
+</div></body></html>
+<div>Credentials Saved<br />Trying to connect ESP to network.<br />If it fails reconnect to AP to try again</div>
+<br/><div class="c"><a href="/wifi">Scan</a></div>
+<br/><button type='submit'>save</button></form>
+<br/><input id='{i}' name='{n}' maxlength={l} placeholder='{p}' value='{v}' {c}>
+<form method='get' action='wifisave'><input id='s' name='s' length=32 placeholder='SSID'><br/><input id='p' name='p' length=64 type='password' placeholder='password'><br/>
+<div><a href='#p' onclick='c(this)'>{v}</a>&nbsp;<span class='q {i}'>{r}%</span></div>
+<form action="/wifi" method="get"><button>Configure WiFi</button></form><br/><form action="/0wifi" method="get"><button>Configure WiFi (No Scan)</button></form><br/><form action="/i" method="get"><button>Info</button></form><br/><form action="/r" method="post"><button>Reset</button></form>
+</head><body><div style='text-align:left;display:inline-block;min-width:260px;'>
+<script>function c(l){document.getElementById('s').value=l.innerText||l.textContent;document.getElementById('p').focus();}</script>
+<style>.c{text-align: center;} div,input{padding:5px;font-size:1em;} input{width:95%;} body{text-align: center;font-family:verdana;} button{border:0;border-radius:0.3rem;background-color:#1fa3ec;color:#fff;line-height:2.4rem;font-size:1.2rem;width:100%;} .q{float: right;width: 64px;text-align: right;} .l{background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAALVBMVEX///8EBwfBwsLw8PAzNjaCg4NTVVUjJiZDRUUUFxdiZGSho6OSk5Pg4eFydHTCjaf3AAAAZElEQVQ4je2NSw7AIAhEBamKn97/uMXEGBvozkWb9C2Zx4xzWykBhFAeYp9gkLyZE0zIMno9n4g19hmdY39scwqVkOXaxph0ZCXQcqxSpgQpONa59wkRDOL93eAXvimwlbPbwwVAegLS1HGfZAAAAABJRU5ErkJggg==") no-repeat left center;background-size: 1em;}</style>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/><title>{v}</title>
+NJF@<8
+pm_for_bcn_only_mode.c
+force slp disable
+force slp enable
+,type: %d
+fpm close %d
+fpm_err,flash_tmp alloc fail
+fpm open,type:%d %d
+list_null
+nul mode, fpm auto sleep set:
+disalbe
+enalbe
+pp.c
+LmacRxBlk:%d
+LmacTxBlk:%d
+map fail
+sta scan trace %d
+sta trace %d
+==dl
+add mismatch
+add %d
+rm %d
+rm mis
+wdev.c
+esf_buf.c
+del if%d
+chg if%d
+add if%d
+aid %d
+bcn %d
+cnt
+uncnt
+tx rts error 0x%x
+tx error 0x%x
+pm.c
+sleep disable
+sleep enable
+,type: %d
+pm wakeup st: %d, cause: %d
+rf close,nulldata_ture
+rf close,nulldata_false
+pm close %d
+pm_err,flash_tmp alloc fail
+pm_flash_read err
+pm open,type:%d %d
+noTIM!!
+list_null
+ieee80211.c
+mode :
+null
+(%02x:%02x:%02x:%02x:%02x:%02x)
+softAP
+(%02x:%02x:%02x:%02x:%02x:%02x)
+ieee80211_hostap.c
+ap freq jump0 to %d
+ap trace %d
+no buf for action frame
+ieee80211_input.c
+ieee80211_output.c
+no buf for probe, ie len %d
+ieee80211_scan.c
+f -200,
+f 0,
+f r%d,
+scandone
+Invalid WEP key %s
+ap_loss
+ieee80211_sta.c
+state: %d -> %d (%x)
+wl_cnx.c
+Station stop, stop scan
+reconnect
+no %s found, reconnect after 1s
+switch to channel %d
+bcn_timout,ap_probe_send_start
+ap_probe_send over, rest wifi status to disassoc
+station: %02x:%02x:%02x:%02x:%02x:%02x leave, AID = %d
+max connection!
+max connection!
+err already associed!
+station: %02x:%02x:%02x:%02x:%02x:%02x join, AID = %d
+VENDOR ACTION: len error step1: %d
+VENDOR ACTION: len error step2: %d
+VENDOR ACTION: unknown ie type
+VENDOR ACTION: type dismatch %d
+ieee80211_action_vendor_spec_attach register recv call back error
+ieee80211_phy.c
+ap_config.c
+common.c
+wpa_auth.c
+Init Counter
+Pairwise key expansion
+Group key expansion
+wpa_auth_ie.c
+Pairwise key expansion
+PMK Name
+wpa_main.c
+connected with %s, channel %d
+dhcp client start...
+check your static ip!
+aes-internal-enc.c
+app_main.c
+RNJD@8
+Firmware ONLY supports ESP8266!!!
+empty otp
+Fatal exception %d
+(IllegalInstructionCause):
+(SyscallCause):
+(InstructionRetchErrorCause):
+(LoadStoreErrorCause):
+(Level1InterruptCause):
+(AllocCause):
+(IntegerDivideByZeroCause):
+(PrivilegedCause):
+(LoadStoreAlignmentCause):
+(InstrPIFDataErrorCause):
+(LoadStorePIFDataErrorCause):
+(InstrPIFAddrErrorCause):
+(LoadStorePIFAddrErrorCause):
+(InstTLBMissCause):
+(InstTLBMultiHitCause):
+(InstFetchPrivilegeCause):
+(InstFetchProhibitedCause):
+(LoadStoreTLBMissCause):
+(LoadStoreTLBMultiHitCause):
+(LoadStorePrivilegeCause):
+(LoadProhibitedCause):
+(StoreProhibitedCause):
+epc1=0x%08x, epc2=0x%08x, epc3=0x%08x, excvaddr=0x%08x, depc=0x%08x
+rf_cal[0] !=0x05,is 0x%02X
+rf cal sector: %d
+freq trace enable %d
+rf[112] : %02x
+rf[113] : %02x
+rf[114] : %02x
+w_flash
+SDK ver: %s compiled @ Jul  3 2019 15:53:05
+phy ver: %d_%d, pp ver: %d.%d
+system param error, use last saved param!
+need boot 1.4+
+eagle_lwip_if.c
+dhcp server start:(
+ip:%d.%d.%d.%d,mask:%d.%d.%d.%d,gw:%d.%d.%d.%d
+time8:%08X
+time9:%08X
+time7:%08X
+time5x:%08X,%08X
+time5y:%p,%p
+time5:%08X
+time6:%08X
+timer:%p cb is null
+err1,exceed max time value
+err2,exceed max time value
+time0:%08X
+err3,exceed max time value
+time1:%08X
+time2:%08X
+time3:%08X
+time4:%08X
+user_interface.c
+ESP-%02X%02X%02X
+DEFERRED FUNC NUMBER IS BIGGER THAN 10
+failed: need boot >= 1.3
+don't supported flash map.
+restart to use user bin @ %x
+test already passed.
+reboot to use test bin @ %x
+don't supported type.
+get bin sumlen failed
+warn: want to erase error sec %d!
+get flash len error
+get irom0 error
+error magic!
+error magic!
+flash read err, %d
+flash read err, %d
+reboot to use
+enter deep sleep
+deep sleep too long
+deep sleep too long
+ip:%d.%d.%d.%d,mask:%d.%d.%d.%d,gw:%d.%d.%d.%d
+data  : 0x%x ~ 0x%x, len: %d
+rodata: 0x%x ~ 0x%x, len: %d
+bss   : 0x%x ~ 0x%x, len: %d
+heap  : 0x%x ~ 0x%x, len: %d
+error parameter
+sec %x error
+current_router_id is %d
+null country
+err: task prio < %d
+err: task queue error
+err: post prio < %d
+[ERR]Not konw GD25Q32C status idx %d
+[ERR]Not konw GD25Q32C status idx %d
+Flash is already QIO!
+QIO INIT OK!
+QIO INIT ERR!!
+spi_flash_read_status err
+GD25Q32C Alrady Qio Mode
+RD DATA:0X%X
+GD25Q32C Config Qio Mode OK
+GD25Q32C Config Qio Mode Fail
+-----BEGIN
+----END
+
+
+
+STUB: sys_untimeout
+STUB: sys_timeout
+lwESP: pbuf_alloc BAD CASE
+STUB: dhcp_release
+STUB: dhcp_cleanup
+ERROR: %s (error %d)
+dhcps_start(): could not obtain pcb
+!@.html
+text/html
+.htm
+text/html
+.css
+text/css
+.txt
+text/plain
+application/javascript
+.json
+application/json
+.png
+image/png
+.gif
+image/gif
+.jpg
+image/jpeg
+.ico
+image/x-icon
+.svg
+image/svg+xml
+.ttf
+application/x-font-ttf
+.otf
+application/x-font-opentype
+.woff
+application/font-woff
+.woff2
+application/font-woff2
+.eot
+application/vnd.ms-fontobject
+.sfnt
+application/font-sfnt
+.xml
+text/xml
+.pdf
+application/pdf
+.zip
+application/zip
+application/x-gzip
+.appcache
+text/cache-manifest
+application/octet-stream
+error: pll_cal exceeds 2ms!!!
+%d,
+%d,
+%d, %d,
+%d, %d,
+%d, %d,
+%d,
+set_rx_gain: rftx=%x, rfrx=x%x, att=%d, txbb=0x%x, bbrx1=0x%x, bbrx2=0x%x, tdc:%d,%d
+total_pwr=%ld, max=%ld,
+%d_%d_%d
+rxiq_reg: i=%d, a_mis=%d, p_mis=%d
+index: %d value: 0x%x 0x%x 0x%x 0x%x
+BK:%d,%d,%d,%d,0x%x
+txdc:%d,%d
+dbp:%d, %x, %d, %d, %d, %d
+%3d,%3d;
+txiq_gain=%d, txiq_phase=%d
+1,target_power,%d, p_error,%d, correct_v,%d, error_accum, %d, tot_p,%d, coatt,%d, att,%d, rf_g,%x, txq_rate,%d, chan,%d, rate_att,%d
+2,target_power,%d, p_error,%d, correct_v,%d, error_accum, %d, tot_p,%d, coatt,%d, att,%d, rf_g,%x, txq_rate,%d, chan,%d, rate_att,%d
+num_k=%d, power_out=%d
+reg_i=%d, indata=%d
+i=%02d  acc=%03d  tgt=%03d  err=%03d  ser=%03d att=%03d
+rxiq_get_mis: total_pwr=%d, %d-%d,
+$@_buffer
+DataSource.h
+_pos <= _streamPos
+cb == stream_rem
+_pos + size <= _size
+!_send_waiting
+ClientContext.h
+_datasource == nullptr
+pcb == _pcb
+buffer == _data + _pos
+X509 CERTIFICATE
+CERTIFICATE
+Request redirected to captive portal
+Sent reset page
+Module will reset in a few seconds.
+Reset
+Sent info page
+</dl>
+</dd>
+<dt>Station MAC</dt><dd>
+<dt>Soft AP MAC</dt><dd>
+<dt>Soft AP IP</dt><dd>
+ bytes</dd>
+<dt>Real Flash Size</dt><dd>
+<dt>IDE Flash Size</dt><dd>
+<dt>Flash Chip ID</dt><dd>
+<dt>Chip ID</dt><dd>
+<dl>
+Info
+Sent wifi save page
+static netmask
+static gateway
+static ip
+Parameter
+WiFi save
+Sent config page
+Skipping due to quality
+No networks found. Refresh to scan again.
+No networks found
+Scan done
+<h3>WiFiManager</h3>
+</h1>
+<h1>
+Handle root
+Connection timed out
+Waiting for connection result with time out
+No saved credentials
+Using last saved values, should be faster
+[ERROR] WiFi.begin res:
+Status:
+Already connected. Bailing out.
+Custom STA IP/GW/Subnet
+Connecting as wifi client...
+HTTP Version not supported
+Gateway Time-out
+Service Unavailable
+Bad Gateway
+Not Implemented
+Internal Server Error
+I'm a teapot
+Expectation Failed
+Requested range not satisfiable
+Unsupported Media Type
+Request-URI Too Large
+Request Entity Too Large
+Precondition Failed
+Length Required
+Gone
+Conflict
+Request Time-out
+Proxy Authentication Required
+Not Acceptable
+Method Not Allowed
+Not Found
+Forbidden
+Payment Required
+Unauthorized
+Bad Request
+Temporary Redirect
+Use Proxy
+Not Modified
+See Other
+Moved Permanently
+Multiple Choices
+Partial Content
+Reset Content
+No Content
+Non-Authoritative Information
+Accepted
+Created
+Switching Protocols
+Continue
+close
+Connection
+chunked
+Transfer-Encoding
+none
+Accept-Ranges
+Content-Type
+HTTP/1.
+Not found:
+blob
+Content-Disposition
+Host
+plain
+Content-Length
+multipart/
+application/x-www-form-urlencoded
+PATCH
+OPTIONS
+DELETE
+POST
+HEAD
+Waiting for sta (10 secs) .......
+Failed to connect.
+Connecting to new AP
+No ssid, skipping wifi
+SET AP STA
+IP Address:
+AutoConnect
+HTTP server started
+/fwlink
+/wifisave
+/0wifi
+/wifi
+AP IP address:
+Custom AP IP/GW/Subnet
+Invalid AccessPoint password. Ignoring
+Configuring access point...
+freeing allocated params!
+Location
+Authorization: Basic
+Accept-Encoding: identity;q=1,chunked;q=0.1,*;q=0
+keep-alive
+Connection:
+User-Agent:
+Host:
+ HTTP/1.
+Authorization
+User-Agent
+ESP8266HTTPClient
+(IP unset)
+abi.cpp
+-FAIL-
+core_esp8266_main.cpp
+User exception (panic/abort/assert)
+%08x:  %08x %08x %08x %08x %c
+last failed alloc call: %08X(%d)
+<<<stack<<<
+sp: %08x end: %08x offset: %04x
+ctx: sys
+ctx: cont
+ctx: bearssl
+sp: %08x end: %08x offset: %04x
+>>>stack>>>
+Generic Reset
+Soft WDT reset
+Exception (%d):
+epc1=0x%08x epc2=0x%08x epc3=0x%08x excvaddr=0x%08x depc=0x%08x
+Abort called
+Unhandled C++ exception: %S
+: Assertion '%S' failed.
+Panic %S:%d %S
+repeat_us < decltype(recurrent_fn_t::callNow)::neverExpires
+Schedule.cpp
+void BufferedStreamDataSource<TStream>::release_buffer(const uint8_t*, size_t) [with TStream = ProgmemStream; uint8_t = unsigned char; size_t = unsigned int]
+const uint8_t* BufferedStreamDataSource<TStream>::get_buffer(size_t) [with TStream = ProgmemStream; uint8_t = unsigned char; size_t = unsigned int]
+size_t ClientContext::_write_from_source(DataSource*)
+err_t ClientContext::_connected(tcp_pcb*, err_t)
+virtual void BufferDataSource::release_buffer(const uint8_t*, size_t)
+virtual const uint8_t* BufferDataSource::get_buffer(size_t)
+bool schedule_recurrent_function_us(const std::function<bool()>&, uint32_t, const std::function<bool()>&)
+__cxa_pure_virtual
+loop_task
+__yield
+vector::_M_emplace_back_aux
+basic_string::_S_construct null not valid
+basic_string::_S_create
+basic_string::compare
+basic_string::substr
+basic_string::copy
+basic_string::_M_replace_aux
+basic_string::replace
+basic_string::erase
+basic_string::insert
+basic_string::assign
+basic_string::append
+basic_string::at
+basic_string::resize
+basic_string::basic_string
+
+
+
+2.2.2-dev(38a443e)
+MQTT
+l	q	v	{
+Message arrived [
+restart
+Restart
+Unknown
+connected...yeey :)
+Attempting MQTT connection...
+connected
+led/
+/action
+failed, rc=
+ try again in 5 seconds
+//""\\b
+https://syssec.ewi.utwente.nl/startup
+Content-Type
+application/json
+{"apikey": "
+0QVLP4Qd0NJm9c6uM6Fx
+mqtt
+host
+port
+username
+password
+IncompleteInput
+InvalidInput
+NoMemory
+NotSupported
+TooDeep
+!<arch>
+%02X:%02X:%02X:%02X:%02X:%02X
+*WM:
+no-net
+Connection result:
+0x00
+Config ESP
+DUP AP:
+<br/>
+Static IP
+Static Gateway
+Subnet
+Content-Length
+text/html
+Credentials Saved
+Info
+Location
+http://
+text/plain
+Options
+POST
+File Not Found
+URI:
+Method:
+Arguments:
+Cache-Control
+no-cache, no-store, must-revalidate
+Pragma
+no-cache
+Expires
+http
+https
+HTTP/1.
+close
+keep-alive
+HEAD
+PATCH
+>>>stack>>>
+%08x:  %08x %08x %08x %08x
+<<<stack<<<
+FATAL ERROR: BSSL stack overflow
+%s %u
+key expansion
+master secret
+client finished
+server finished
+esp8266
+e%ld
+Infinity
+POSIX
+#-0+
+efgEFG
+send_offer
+dhcps send ack
+dhcps send nak
+.local
+www.
+(! @
+!@T! @
+0>0B2@4?
+NJF@<8
+|8|9|:|;|<|=|x|y|z|{|||}|
+draane-hotspot
+WM: }
+Vlz*
+ESP12773757
+... L
+draane-hotspot
+WM: }
+draane-hotspot
+WM: }
+Vlz*
+ESP12773757
+... L
+draane-hotspot
+WM: }
