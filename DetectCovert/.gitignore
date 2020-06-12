@@ -1,0 +1,8 @@
+# PRNG
+.idea
+.DS_Store
+venv
+cmake-build-debug/
+__pycache__
+docs
+
