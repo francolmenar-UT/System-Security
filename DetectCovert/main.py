@@ -63,9 +63,7 @@ pcap_files = [OR_PCAP_PA + f for f in listdir(OR_PCAP_PA) if isfile(join(OR_PCAP
 # Sort them alphabetically
 pcap_files.sort()
 
-
 parse_pcap(pcap_files)
-
 
 # List with all the reader files
 reader_list = []
@@ -75,11 +73,24 @@ for pcap in pcap_files:
     last_name = pcap.split('/')
     reader_list.append(PcapReader(ONLY_TCP_SRC_P + last_name[len(last_name) - 1]))
 
+flags_list = []
 
-# Print packet count just for testing
+# Get the flags from the packets
 for reader in reader_list:
-    packet_count = 0
-    for pkt in tqdm(reader):
-        packet_count = packet_count + 1
+    set_pk = set([])
 
-    # print(packet_count)
+    for pkt in tqdm(reader):
+        ip = pkt.payload.payload
+
+        print(ip.flags)
+
+        set_pk.add(ip.flags)
+
+    pk_list = list(set_pk)
+    pk_list = [int(x) for x in pk_list]
+    pk_list.sort()
+
+    flags_list.append(pk_list)
+
+
+print(flags_list)
