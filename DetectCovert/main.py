@@ -78,19 +78,26 @@ flags_list = []
 # Get the flags from the packets
 for reader in reader_list:
     set_pk = set([])
+    six_ten_ctn, eight_ten_ctn, twenty_four_ctn = 0, 0, 0
 
     for pkt in tqdm(reader):
-        ip = pkt.payload.payload
+        flags = pkt.payload.payload.flags
 
-        print(ip.flags)
+        six_ten_ctn = six_ten_ctn + 1 if flags == 16 else six_ten_ctn
 
-        set_pk.add(ip.flags)
+        eight_ten_ctn = eight_ten_ctn + 1 if flags == 18 else eight_ten_ctn
+
+        twenty_four_ctn = twenty_four_ctn + 1 if flags == 24 else twenty_four_ctn
+
+        set_pk.add(flags)
 
     pk_list = list(set_pk)
     pk_list = [int(x) for x in pk_list]
     pk_list.sort()
 
-    flags_list.append(pk_list)
+    flags_list.append([[pk_list[0], six_ten_ctn],
+                       [pk_list[1], eight_ten_ctn],
+                       [pk_list[2], twenty_four_ctn]])
 
-
-print(flags_list)
+for i in flags_list:
+    print(i)
