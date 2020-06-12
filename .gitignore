@@ -11,3 +11,6 @@ PRNG/data/Part2/Section2-input-data/
 # PUF
 PUF/bin
 PUF/log.txt
+
+.npy
+
