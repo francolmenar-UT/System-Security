@@ -28,10 +28,10 @@ def save_time(file, data_list, length):
     output_f.close()
 
 
-def print_result(best_guess, ge, sub_key_amount):
+def print_result(best_guess, known_key, ge, sub_key_amount):
     # Print result
-    for b in range(0, sub_key_amount):
-        print("Best Key Guess: ", best_guess[b], " GE: ", ge[b])
+    for sub_key in range(0, sub_key_amount):
+        print("Real  KEY:", known_key[sub_key], "\t Best Key Guess: ", best_guess[sub_key], "\t GE: ", ge[sub_key])
 
 
 def read_np(files):
