@@ -1,12 +1,10 @@
 .idea/
 .DS_Store
 
-ASCAD/
-CFI/
-Pooled/
-CPA/
 doc/
-Privacy-Assignment-3/
+*.h5
+*.npy
+
 
 
 
