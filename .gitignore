@@ -1,3 +1,15 @@
+.idea/
+.DS_Store
+
+ASCAD/
+CFI/
+Pooled/
+CPA/
+doc/
+Privacy-Assignment-3/
+
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
