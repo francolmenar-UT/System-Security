@@ -53,6 +53,15 @@ def parse_pcap(files):
     create_only_http(files) if CONVERT_HTTP else None
 
 
+def print_flags(flags_l):
+    arrow = "---->"
+    for idx, flag in enumerate(flags_l):
+        if idx > 8:
+            arrow = "--->"
+        print("Pcap file: {} {} Flag {}: {} \t Flag {}: {} \t Flag {}: {}".format(
+            idx + 1, arrow, flag[0][0], flag[0][1], flag[1][0], flag[1][1], flag[2][0], flag[2][1], ))
+
+
 # Create the folders
 for f in FOLDERS_P:
     create_folder(f)
@@ -99,5 +108,5 @@ for reader in reader_list:
                        [pk_list[1], eight_ten_ctn],
                        [pk_list[2], twenty_four_ctn]])
 
-for i in flags_list:
-    print(i)
+
+print_flags(flags_list)
