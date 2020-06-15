@@ -1,7 +1,6 @@
 import sys
 
 import h5py
-import numpy as np
 from scipy.stats import multivariate_normal
 from src.functions.func import *
 
@@ -83,7 +82,8 @@ def compute_tracesHW(traces_train, output_sbox_hw):
     return result
 
 
-def compute_key(traces_test, features, hamming, sbox, pt_test, mean_matrix, cov_matrix, known_key, ge, best_guess, byte):
+def compute_key(traces_test, features, hamming, sbox, pt_test, mean_matrix, cov_matrix, known_key, ge, best_guess,
+                byte):
     """
     Compute the best key guess
 
@@ -127,6 +127,73 @@ def compute_key(traces_test, features, hamming, sbox, pt_test, mean_matrix, cov_
     return
 
 
+def calc_mean(traces_train, traces_hw):
+    """
+    Calculate the mean value from the HW for each XXXXXX
+    :param traces_train: Traces to profile
+    :param traces_hw: HW values from the traces
+    :return: The means from the HW
+    """
+    # TODO check if the 9 means is because of the test index in the main method
+    # TODO check why there is a 0 there???
+    # Set the mean values to 0
+    means = np.zeros((9, len(traces_train[0])))
+
+    # For each XXXX calculate the average value for the HW value TODO change XXX
+    for i in range(9):
+        means[i] = np.average(traces_hw[i], 0)
+
+    return means
+
+
+def calc_sum_diff(traces_train, means):
+    """
+    Calculates the Sum of the Difference
+    :param traces_train: Traces to profile
+    :param means: The means from the HW
+    :return: The Sum of the Difference
+    """
+    # Initialize SumDiff to zeros
+    SumDiff = np.zeros(len(traces_train[0]))
+    # Calculate the sum of the differences TODO Check for what is this??
+    for i in range(9):
+        for j in range(i):
+            # Get the absolute value of the difference
+            SumDiff += np.abs(means[i] - means[j])
+
+    return SumDiff
+
+
+def calc_features(sum_diff):
+    """
+    Calculates the features and updates SumDiff
+    :param sum_diff: The Sum of the Difference
+    :return: The features calculated and the SumDiff
+    """
+    # Initialize the features to be taken
+    features = []
+
+    # Go through all the features to be considered
+    for i in range(NUM_FEATURES):
+        # Take the maximum value from the SumDiff
+        nextFeature = sum_diff.argmax()
+        # Add the next Feature
+        features.append(nextFeature)
+
+        # Get the max value from 0 to the value belonging to the next feature minus spacing
+        featureMin = max(0, nextFeature - FEATURE_SPACING)
+        # Get the minimum value from the value belonging to the next feature minus spacing up to the length of SumDiff
+        # Which is the amount of Traces to Train
+        featureMax = min(nextFeature + FEATURE_SPACING, len(sum_diff))
+
+        # Go through every value from featureMin to featureMax
+        for j in range(featureMin, featureMax):
+            # Set the Sum of the difference to 0
+            sum_diff[j] = 0
+
+    return features, sum_diff
+
+
 def pool_atack(profile_size, attack_size):
     """
 
@@ -149,7 +216,6 @@ def pool_atack(profile_size, attack_size):
     # TODO Do I have to set here the values from the input???
     tracesTrain = traces[0:9000]
     ptTrain = pt[0:9000]
-
     tracesTest = traces[9990:10000]
     ptTest = pt[9990:10000]
 
@@ -160,49 +226,18 @@ def pool_atack(profile_size, attack_size):
 
     # Compute the HW value for the traces
     TracesHW = compute_tracesHW(tracesTrain, outputSboxHW)
-
-    # TODO check if the 9 means is because of the test index in the main method
-    # TODO check why there is a 0 there???
-    # Set the mean values to 0
-    Means = np.zeros((9, len(tracesTrain[0])))
-
-    # For each XXXX calculate the average value for the HW value TODO change XXX
-    for i in range(9):
-        Means[i] = np.average(TracesHW[i], 0)
-
-    # Initialize SumDiff to zeros
-    SumDiff = np.zeros(len(tracesTrain[0]))
-    # Calculate the sum of the differences TODO Check for what is this??
-    for i in range(9):
-        for j in range(i):
-            # Get the absolute value of the difference
-            SumDiff += np.abs(Means[i] - Means[j])
+    # Compute the Mean values from the HW
+    Means = calc_mean(tracesTrain, TracesHW)
+    # Compute the Sum of the Difference
+    SumDiff = calc_sum_diff(tracesTrain, Means)
 
     # Plot stuff TODO Probably remove this
     plt.plot(SumDiff)
     plt.grid()
     # plt.show()
 
-    # Initialize the features to be taken
-    features = []
-
-    # Go through all the features to be considered
-    for i in range(NUM_FEATURES):
-        # Take the maximum value from the SumDiff
-        nextFeature = SumDiff.argmax()
-        # Add the next Feature
-        features.append(nextFeature)
-
-        # Get the max value from 0 to the value belonging to the next feature minus spacing
-        featureMin = max(0, nextFeature - FEATURE_SPACING)
-        # Get the minimum value from the value belonging to the next feature minus spacing up to the length of SumDiff
-        # Which is the amount of Traces to Train
-        featureMax = min(nextFeature + FEATURE_SPACING, len(SumDiff))
-
-        # Go through every value from featureMin to featureMax
-        for j in range(featureMin, featureMax):
-            # Set the Sum of the difference to 0
-            SumDiff[j] = 0
+    # Calculate the features and update SumDiff
+    features, SumDiff = calc_features(SumDiff)
 
     # Initialize the matrix of means to zero
     meanMatrix = np.zeros((9, NUM_FEATURES))
@@ -244,5 +279,5 @@ def pool_atack(profile_size, attack_size):
         # Compute the key for the attacked key bytes
         compute_key(tracesTest, features, hamming, SBOX, ptTest, meanMatrix, covMatrix, knownkey, ge, best_guess, byte)
 
-    print_result(best_guess, knownkey,  ge, SUB_KEY_AMOUNT) if DEBUG else None
+    print_result(best_guess, knownkey, ge, SUB_KEY_AMOUNT) if DEBUG else None
     return 0
