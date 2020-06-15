@@ -194,10 +194,86 @@ def calc_features(sum_diff):
     return features, sum_diff
 
 
+def calc_mean_cov(cov_matrix):
+    """
+    Updates the value of the covariance matrix by calculating its mean
+    :param cov_matrix: Covariance matrix
+    :return: Updated Covariance Matrix
+    """
+    # Calculate the mean of the covariance values
+    for i in range(NUM_FEATURES):
+        for j in range(NUM_FEATURES):
+            cov_matrix[i, j] /= 9
+
+    return cov_matrix
+
+
+def calc_mean_cov_mat(means, features, traces_hw):
+    """
+    Calculate the matrices for the mean and for the covariance
+    :param means: The means from the HW
+    :param features: Features to be used
+    :param traces_hw: HW values from the traces
+    :return: The matrices for the mean and for the covariance
+    """
+    # Initialize the matrix of means to zero
+    meanMatrix = np.zeros((9, NUM_FEATURES))
+
+    # Initialize the matrix of covariance to zero - Square matrix of length of the number of features
+    covMatrix = np.zeros((NUM_FEATURES, NUM_FEATURES))
+
+    # Go through the HW value in XXXX #TODO Check change the value XXXX
+    for HW in range(9):
+        # For each HW in XXXX  go through every feature TODO
+        for i in range(NUM_FEATURES):
+            # Assign the value to the mean matrix
+            meanMatrix[HW][i] = means[HW][features[i]]
+
+            for j in range(NUM_FEATURES):
+                # TODO Check what is happening here
+                x = traces_hw[HW][:, features[i]]
+                y = traces_hw[HW][:, features[j]]
+
+                # Calculate the covariance value
+                c = cov(x, y)
+                # Sum the covariance value to the place in the covariance matrix
+                covMatrix[i, j] += c
+
+    return meanMatrix, covMatrix
+
+
+def calc_ge_guess(traces_test, features, hamming, pt_test, mean_matrix, cov_matrix, known_key):
+    """
+    Calculates the GE and the Best Guess for each byte of the key analyzed
+    :param traces_test:
+    :param features:
+    :param hamming:
+    :param pt_test:
+    :param mean_matrix:
+    :param cov_matrix:
+    :param known_key:
+    :return:
+    """
+    # TODO change KEY_BYTES to the ones to be calculated
+    # Initialize the guessing entropy
+    ge = np.zeros(KEY_BYTES)
+    # Initialize the best guess
+    best_guess = np.zeros(KEY_BYTES)
+
+    # For each key bytes calculate the guessed key
+    for byte in range(KEY_BYTES):
+        # Compute the key for the attacked key bytes
+        compute_key(traces_test, features, hamming, SBOX, pt_test,
+                    mean_matrix, cov_matrix, known_key, ge, best_guess, byte)
+
+    return ge, best_guess
+
+
 def pool_atack(profile_size, attack_size):
     """
-
-    :return:
+    Performs the Pooled Template Attack
+    :param profile_size: TODO
+    :param attack_size: TODO
     """
     # Check if all the needed folders are created
     for folder in FOLDERS:
@@ -239,45 +315,14 @@ def pool_atack(profile_size, attack_size):
     # Calculate the features and update SumDiff
     features, SumDiff = calc_features(SumDiff)
 
-    # Initialize the matrix of means to zero
-    meanMatrix = np.zeros((9, NUM_FEATURES))
-
-    # Initialize the matrix of covariance to zero - Square matrix of length of the number of features
-    covMatrix = np.zeros((NUM_FEATURES, NUM_FEATURES))
-
-    # Go through the HW value in XXXX #TODO Check change the value XXXX
-    for HW in range(9):
-        # For each HW in XXXX  go through every feature TODO
-        for i in range(NUM_FEATURES):
-            # Assign the value to the mean matrix
-            meanMatrix[HW][i] = Means[HW][features[i]]
-
-            for j in range(NUM_FEATURES):
-                # TODO Check what is happening here
-                x = TracesHW[HW][:, features[i]]
-                y = TracesHW[HW][:, features[j]]
-
-                # Calculate the covariance value
-                c = cov(x, y)
-                # Sum the covariance value to the place in the covariance matrix
-                covMatrix[i, j] += c
+    # Calculate the matrices from the mean and the covariances
+    meanMatrix, covMatrix = calc_mean_cov_mat(Means, features, TracesHW)
 
     # Calculate the mean of the covariance values
-    for i in range(NUM_FEATURES):
-        for j in range(NUM_FEATURES):
-            covMatrix[i, j] /= 9
+    covMatrix = calc_mean_cov(covMatrix)
 
-    # print(covMatrix)
-    # TODO change KEY_BYTES to the ones to be calculated
-    # Initialize the guessing entropy
-    ge = np.zeros(KEY_BYTES)
-    # Initialize the best guess
-    best_guess = np.zeros(KEY_BYTES)
-
-    # For each key bytes
-    for byte in range(KEY_BYTES):
-        # Compute the key for the attacked key bytes
-        compute_key(tracesTest, features, hamming, SBOX, ptTest, meanMatrix, covMatrix, knownkey, ge, best_guess, byte)
+    # Calculate the GE and the Best Guess for each key byte analyzed
+    ge, best_guess = calc_ge_guess(tracesTest, features, hamming, ptTest, meanMatrix, covMatrix, knownkey)
 
     print_result(best_guess, knownkey, ge, SUB_KEY_AMOUNT) if DEBUG else None
     return 0
