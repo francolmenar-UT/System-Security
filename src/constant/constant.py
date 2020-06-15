@@ -1,5 +1,5 @@
 ########################### H5 to NPY File Variables ###########################
-CALC_NPY = True  # Convert the H5 file to NPY if True
+CALC_NPY = False  # Convert the H5 file to NPY if True
 H5_TRACES_P = "data/ASCAD/ATMega8515_raw_traces.h5"
 
 ###########################  NPY File Variables ###########################
@@ -13,6 +13,15 @@ NPY = ".npy"
 DATA_F = "data/"
 DATA_NPY = "data/npy/"
 
+###########################  Scenario Variables ###########################
+# First Scenario
+PROFILE_0 = 18000
+ATTACK_0 = 6000
+
+# Second Scenario
+PROFILE_1 = 27000
+ATTACK_1 = 12000
+
 
 ###########################  All the folders used ###########################
 
@@ -21,6 +30,11 @@ FOLDERS = [DATA_F, DATA_NPY]
 ###########################  Constants for the Execution of the PTA ###########################
 DEBUG = True
 SUB_KEY_AMOUNT = 2  # Amount the sub-keys used
+HW_SIZE = 256  # Size of the HW array containing the results
+
+NUM_FEATURES = 50
+FEATURE_SPACING = 0
+KEY_BYTES = 16
 
 SBOX = (
     0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,

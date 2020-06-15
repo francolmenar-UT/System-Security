@@ -3,6 +3,7 @@ from pyfiglet import Figlet
 
 import timeit
 # from src.graph.createGraph import create_graph
+from src.constant.constant import *
 
 from src.pool import pool_atack
 
@@ -14,7 +15,8 @@ def main():
 
 @main.command(help='')
 def run():
-    pool_atack()
+    # Firs Scenario
+    pool_atack(PROFILE_0, ATTACK_0)
     return 0
 
 
