@@ -33,7 +33,7 @@ SUB_KEY_AMOUNT = 2  # Amount the sub-keys used
 HW_SIZE = 256  # Size of the HW array containing the results
 
 NUM_FEATURES = 50
-FEATURE_SPACING = 0
+FEATURE_SPACING = 1
 KEY_BYTES = 16
 
 SBOX = (

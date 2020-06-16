@@ -302,6 +302,7 @@ def pool_atack(profile_size, attack_size):
 
     # Compute the HW value for the traces
     TracesHW = compute_tracesHW(tracesTrain, outputSboxHW)
+
     # Compute the Mean values from the HW
     Means = calc_mean(tracesTrain, TracesHW)
     # Compute the Sum of the Difference
