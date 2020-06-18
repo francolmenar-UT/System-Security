@@ -31,6 +31,10 @@ FOLDERS = [DATA_F, DATA_NPY]
 DEBUG = True
 SUB_KEY_AMOUNT = 2  # Amount the sub-keys used
 HW_SIZE = 256  # Size of the HW array containing the results
+HW_MODEL_SIZE = 9  # The only possible values for HW are from 0-8
+
+PROF_TRACES_NM = 9000
+ATTACK_TRACES_NM = 500
 
 NUM_FEATURES = 50
 FEATURE_SPACING = 1

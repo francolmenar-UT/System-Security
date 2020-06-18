@@ -64,9 +64,8 @@ def compute_tracesHW(traces_train, output_sbox_hw):
     :param output_sbox_hw: Output of the Sbox
     :return: The HW value for all the traces as a list of np arrays
     """
-    # TODO check if the 9 means is because of the test index in the main method
     # Initialize the HW parameter
-    TracesHW = [[] for _ in range(9)]
+    TracesHW = [[] for _ in range(HW_MODEL_SIZE)]
 
     # Go through all the traces
     for i in range(len(traces_train)):
@@ -75,9 +74,9 @@ def compute_tracesHW(traces_train, output_sbox_hw):
         # In the position of the output value from the Sbox append the actual trace
         TracesHW[HW].append(traces_train[i])
 
-    # TODO check if the 9 means is because of the test index in the main method
     # Convert the list of lists containing the HW values to a list of np arrays
-    result = [np.array(TracesHW[HW]) for HW in range(9)]
+    result = [np.array(TracesHW[HW]) for HW in range(HW_MODEL_SIZE)]
+    print(result)
 
     return result
 
@@ -104,6 +103,8 @@ def compute_key(traces_test, features, hamming, sbox, pt_test, mean_matrix, cov_
     P_k = np.zeros(HW_SIZE)
 
     # For every test trace
+    print(len(traces_test[0]))
+    print(features)
     for j in range(len(traces_test)):
 
         # Select the POI
@@ -129,18 +130,17 @@ def compute_key(traces_test, features, hamming, sbox, pt_test, mean_matrix, cov_
 
 def calc_mean(traces_train, traces_hw):
     """
-    Calculate the mean value from the HW for each XXXXXX
+    Calculate the mean value from the HW
     :param traces_train: Traces to profile
     :param traces_hw: HW values from the traces
     :return: The means from the HW
     """
-    # TODO check if the 9 means is because of the test index in the main method
     # TODO check why there is a 0 there???
     # Set the mean values to 0
-    means = np.zeros((9, len(traces_train[0])))
+    means = np.zeros((HW_MODEL_SIZE, len(traces_train[0])))
 
-    # For each XXXX calculate the average value for the HW value TODO change XXX
-    for i in range(9):
+    # For each mean value calculate the average value for the HW value
+    for i in range(HW_MODEL_SIZE):
         means[i] = np.average(traces_hw[i], 0)
 
     return means
@@ -155,8 +155,9 @@ def calc_sum_diff(traces_train, means):
     """
     # Initialize SumDiff to zeros
     SumDiff = np.zeros(len(traces_train[0]))
+
     # Calculate the sum of the differences TODO Check for what is this??
-    for i in range(9):
+    for i in range(HW_MODEL_SIZE):
         for j in range(i):
             # Get the absolute value of the difference
             SumDiff += np.abs(means[i] - means[j])
@@ -177,6 +178,7 @@ def calc_features(sum_diff):
     for i in range(NUM_FEATURES):
         # Take the maximum value from the SumDiff
         nextFeature = sum_diff.argmax()
+
         # Add the next Feature
         features.append(nextFeature)
 
@@ -203,7 +205,7 @@ def calc_mean_cov(cov_matrix):
     # Calculate the mean of the covariance values
     for i in range(NUM_FEATURES):
         for j in range(NUM_FEATURES):
-            cov_matrix[i, j] /= 9
+            cov_matrix[i, j] /= HW_MODEL_SIZE
 
     return cov_matrix
 
@@ -217,14 +219,14 @@ def calc_mean_cov_mat(means, features, traces_hw):
     :return: The matrices for the mean and for the covariance
     """
     # Initialize the matrix of means to zero
-    meanMatrix = np.zeros((9, NUM_FEATURES))
+    meanMatrix = np.zeros((HW_MODEL_SIZE, NUM_FEATURES))
 
     # Initialize the matrix of covariance to zero - Square matrix of length of the number of features
     covMatrix = np.zeros((NUM_FEATURES, NUM_FEATURES))
 
-    # Go through the HW value in XXXX #TODO Check change the value XXXX
-    for HW in range(9):
-        # For each HW in XXXX  go through every feature TODO
+    # Go through the HW values
+    for HW in range(HW_MODEL_SIZE):
+        # For each HW value  go through every feature
         for i in range(NUM_FEATURES):
             # Assign the value to the mean matrix
             meanMatrix[HW][i] = means[HW][features[i]]
@@ -264,7 +266,7 @@ def calc_ge_guess(traces_test, features, hamming, pt_test, mean_matrix, cov_matr
     for byte in range(KEY_BYTES):
         # Compute the key for the attacked key bytes
         compute_key(traces_test, features, hamming, SBOX, pt_test,
-                    mean_matrix, cov_matrix, known_key, ge, best_guess, byte)
+                    mean_matrix, cov_matrix, known_key, ge, best_guess, 7)
 
     return ge, best_guess
 
@@ -290,10 +292,11 @@ def pool_atack(profile_size, attack_size):
 
     # Get the actual traces to be used from the total amount of traces
     # TODO Do I have to set here the values from the input???
-    tracesTrain = traces[0:9000]
-    ptTrain = pt[0:9000]
-    tracesTest = traces[9990:10000]
-    ptTest = pt[9990:10000]
+    tracesTrain = traces[0:PROF_TRACES_NM, 0:profile_size]
+    ptTrain = pt[0:PROF_TRACES_NM]
+
+    tracesTest = traces[PROF_TRACES_NM:(PROF_TRACES_NM + ATTACK_TRACES_NM), 0:attack_size]
+    ptTest = pt[PROF_TRACES_NM:(PROF_TRACES_NM + ATTACK_TRACES_NM)]
 
     # Calculate the output of the S box
     outputSbox = [SBOX[ptTrain[i][0] ^ knownkey[i][0]] for i in range(len(ptTrain))]
