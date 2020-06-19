@@ -17,6 +17,9 @@ def main():
 def run():
     # Firs Scenario
     pool_atack(PROFILE_0, ATTACK_0)
+
+    # Second Scenario
+    # pool_atack(PROFILE_1, ATTACK_1)
     return 0
 
 

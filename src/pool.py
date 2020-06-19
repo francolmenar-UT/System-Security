@@ -114,12 +114,27 @@ def compute_key(traces_test, features, hamming, sbox, pt_test, mean_matrix, cov_
         for k_guess in range(0, HW_SIZE):
             # Get the HW
             HW = hamming[sbox[pt_test[j][byte] ^ k_guess]]
-            # Compute pdf
-            rv = multivariate_normal(mean_matrix[HW], cov_matrix)
+            # Avoid -inf case
+            if HW != 0:
+                # Compute pdf
+                rv = multivariate_normal(mean_matrix[HW], cov_matrix)
 
-            p_kj = rv.pdf(a)
+                p_kj = rv.pdf(a)
 
-            P_k[k_guess] += np.log(p_kj)
+                P_k[k_guess] += np.log(p_kj)
+            # If it is 0, we get the smallest value
+            else:
+                # Get the minimum value
+                min_prob = np.min(mean_matrix[np.nonzero(mean_matrix)])
+                # Set the shape of the minimum value
+                min_prob = [min_prob for i in range(len(features))]
+
+                # Compute pdf
+                rv = multivariate_normal(min_prob, cov_matrix)
+
+                p_kj = rv.pdf(a)
+
+                P_k[k_guess] += np.log(p_kj)
 
         # Compute current GE and best_guess
         tarefs = np.argsort(P_k)[::-1]
