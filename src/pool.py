@@ -76,7 +76,6 @@ def compute_tracesHW(traces_train, output_sbox_hw):
 
     # Convert the list of lists containing the HW values to a list of np arrays
     result = [np.array(TracesHW[HW]) for HW in range(HW_MODEL_SIZE)]
-    # print(result)
 
     return result
 
@@ -86,11 +85,11 @@ def compute_key(traces_test, features, hamming, sbox, pt_test, mean_matrix, cov_
     """
     Compute the best key guess
 
-    :param traces_test: Traces to test - TODO Does it means attack
+    :param traces_test: Traces to test
     :param features: Features to be used
     :param hamming: Hamming Weight Array set to 1s
     :param sbox: Sbox defined as a constant
-    :param pt_test: Plain text to be tested  - TODO Does it means attack
+    :param pt_test: Plain text to be tested
     :param mean_matrix: Matrix with the mean values
     :param cov_matrix: Matrix with the covariance values
     :param known_key: The actual key used
@@ -163,7 +162,6 @@ def calc_mean(traces_train, traces_hw):
     :param traces_hw: HW values from the traces
     :return: The means from the HW
     """
-    # TODO check why there is a 0 there???
     # Set the mean values to 0
     means = np.zeros((HW_MODEL_SIZE, len(traces_train[0])))
 
@@ -284,7 +282,6 @@ def calc_ge_guess(traces_test, features, hamming, pt_test, mean_matrix, cov_matr
     :param known_key:
     :return:
     """
-    # TODO change KEY_BYTES to the ones to be calculated
     # Initialize the guessing entropy
     ge = np.zeros(KEY_BYTES)
     # Initialize the best guess
@@ -304,8 +301,8 @@ def comp_result(known_key, best_guess, byte):
 def pool_atack(profile_size, attack_size):
     """
     Performs the Pooled Template Attack
-    :param profile_size: TODO
-    :param attack_size: TODO
+    :param profile_size: Amount of measurements for profiling
+    :param attack_size: Amount of measurements for attacking
     """
     # Check if all the needed folders are created
     for folder in FOLDERS:
@@ -321,15 +318,6 @@ def pool_atack(profile_size, attack_size):
     hamming = [bin(n).count("1") for n in range(HW_SIZE)]
 
     # Get the actual traces to be used from the total amount of traces
-    # TODO Do I have to set here the values from the input???
-    """
-    tracesTrain = traces[0:PROF_TRACES_NM, 0:profile_size]
-    ptTrain = pt[0:PROF_TRACES_NM]
-
-    tracesTest = traces[PROF_TRACES_NM:(PROF_TRACES_NM + ATTACK_TRACES_NM), 0:attack_size]
-    ptTest = pt[PROF_TRACES_NM:(PROF_TRACES_NM + ATTACK_TRACES_NM)]
-    """
-
     tracesTrain = traces[0:profile_size]
     ptTrain = pt[0:profile_size]
 
