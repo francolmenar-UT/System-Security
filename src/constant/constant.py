@@ -15,8 +15,10 @@ DATA_NPY = "data/npy/"
 
 ###########################  Scenario Variables ###########################
 # First Scenario
-PROFILE_0 = 18000
-ATTACK_0 = 6000
+PROFILE_0 = 500
+ATTACK_0 = 100
+# PROFILE_0 = 18000
+# ATTACK_0 = 6000
 
 # Second Scenario
 PROFILE_1 = 27000
@@ -36,9 +38,10 @@ HW_MODEL_SIZE = 9  # The only possible values for HW are from 0-8
 PROF_TRACES_NM = 9000
 ATTACK_TRACES_NM = 500
 
-NUM_FEATURES = 50
+NUM_FEATURES = 3
 FEATURE_SPACING = 1
 KEY_BYTES = 16
+ATTACK_B = 6
 
 SBOX = (
     0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,

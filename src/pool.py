@@ -76,7 +76,7 @@ def compute_tracesHW(traces_train, output_sbox_hw):
 
     # Convert the list of lists containing the HW values to a list of np arrays
     result = [np.array(TracesHW[HW]) for HW in range(HW_MODEL_SIZE)]
-    print(result)
+    # print(result)
 
     return result
 
@@ -102,11 +102,12 @@ def compute_key(traces_test, features, hamming, sbox, pt_test, mean_matrix, cov_
     # Initialize P_k - It will be used to store the key guessed before returning them
     P_k = np.zeros(HW_SIZE)
 
-    # For every test trace
-    print(len(traces_test[0]))
-    print(features)
-    for j in range(len(traces_test)):
+    # List storing the top 5 Guesses and GEs
+    list_guesses = []
+    list_ge = []
 
+    # For every test trace
+    for j in range(len(traces_test)):
         # Select the POI
         a = [traces_test[j][features[i]] for i in range(len(features))]
 
@@ -116,16 +117,43 @@ def compute_key(traces_test, features, hamming, sbox, pt_test, mean_matrix, cov_
             HW = hamming[sbox[pt_test[j][byte] ^ k_guess]]
             # Compute pdf
             rv = multivariate_normal(mean_matrix[HW], cov_matrix)
+
             p_kj = rv.pdf(a)
 
             P_k[k_guess] += np.log(p_kj)
 
         # Compute current GE and best_guess
         tarefs = np.argsort(P_k)[::-1]
-        ge[byte] = list(tarefs).index(known_key[0][byte])
-        best_guess[byte] = np.argsort(P_k)[-1]
 
-    return
+        # Aux variables
+        ge_j = list(tarefs).index(known_key[0][byte])
+        guess_j = np.argsort(P_k)[-1]
+
+        # Check if the new key guess needs to be stored
+        if guess_j in list_guesses:
+            # The last key stores is not the same as guess_j, then remove it from the list to store it at the end
+            if best_guess[byte] != guess_j:
+                del list_ge[list_guesses.index(guess_j)]
+                list_ge.append(ge_j)
+
+                list_guesses.remove(guess_j)
+                list_guesses.append(guess_j)
+            # The last key guessed stored is the same as guess_j, then only GE is updated
+            else:
+                list_ge[len(list_ge) - 1] = ge_j
+        # The key guess is new so append it to the lists
+        else:
+            list_ge.append(ge_j)
+            list_guesses.append(guess_j)
+
+        best_guess[byte] = guess_j
+        ge[byte] = ge_j
+
+    # Reverse the order of the lists to get the last occurrence the first one
+    final_guesses = list(reversed(list_guesses))
+    final_ge = list(reversed(list_ge))
+
+    return final_ge[0:5], final_guesses[0:5]
 
 
 def calc_mean(traces_train, traces_hw):
@@ -262,13 +290,17 @@ def calc_ge_guess(traces_test, features, hamming, pt_test, mean_matrix, cov_matr
     # Initialize the best guess
     best_guess = np.zeros(KEY_BYTES)
 
-    # For each key bytes calculate the guessed key
-    for byte in range(KEY_BYTES):
-        # Compute the key for the attacked key bytes
-        compute_key(traces_test, features, hamming, SBOX, pt_test,
-                    mean_matrix, cov_matrix, known_key, ge, best_guess, 7)
+    # Calculate the guessed key for the byte 7
+    ge, best_guess = compute_key(traces_test, features, hamming, SBOX, pt_test,
+                                 mean_matrix, cov_matrix, known_key, ge, best_guess, ATTACK_B)
 
     return ge, best_guess
+
+
+def comp_result(knownkey, best_guess):
+    # print(knownkey)
+    # print(best_guess)
+    return 0
 
 
 def pool_atack(profile_size, attack_size):
@@ -292,11 +324,19 @@ def pool_atack(profile_size, attack_size):
 
     # Get the actual traces to be used from the total amount of traces
     # TODO Do I have to set here the values from the input???
+    """
     tracesTrain = traces[0:PROF_TRACES_NM, 0:profile_size]
     ptTrain = pt[0:PROF_TRACES_NM]
 
     tracesTest = traces[PROF_TRACES_NM:(PROF_TRACES_NM + ATTACK_TRACES_NM), 0:attack_size]
     ptTest = pt[PROF_TRACES_NM:(PROF_TRACES_NM + ATTACK_TRACES_NM)]
+    """
+
+    tracesTrain = traces[0:profile_size]
+    ptTrain = pt[0:profile_size]
+
+    tracesTest = traces[profile_size:(profile_size + attack_size)]
+    ptTest = pt[profile_size:(profile_size + attack_size)]
 
     # Calculate the output of the S box
     outputSbox = [SBOX[ptTrain[i][0] ^ knownkey[i][0]] for i in range(len(ptTrain))]
@@ -328,5 +368,10 @@ def pool_atack(profile_size, attack_size):
     # Calculate the GE and the Best Guess for each key byte analyzed
     ge, best_guess = calc_ge_guess(tracesTest, features, hamming, ptTest, meanMatrix, covMatrix, knownkey)
 
-    print_result(best_guess, knownkey, ge, SUB_KEY_AMOUNT) if DEBUG else None
+    print_result(best_guess, knownkey, ge, ATTACK_B) if DEBUG else None
+
+    # Compares the 5 most likely guesses with the correct key
+    comp_res = comp_result(knownkey, best_guess)
+
+    print(comp_res)
     return 0

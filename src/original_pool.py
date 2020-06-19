@@ -38,11 +38,11 @@ traces = np.load(r'../data/npy/traces.npy')
 pt = np.load(r'../data/npy/plain.npy')
 knownkey = np.load(r'../data/npy/key.npy')
 
-tracesTrain = traces[0:9000]
-ptTrain = pt[0:9000]
+tracesTrain = traces[0:4000]
+ptTrain = pt[0:4000]
 
-tracesTest = traces[9000:10000]
-ptTest = pt[9000:10000]
+tracesTest = traces[4000:4010]
+ptTest = pt[4000:4010]
 
 outputSbox = [sbox[ptTrain[i][0] ^ knownkey[i][0]] for i in range(len(ptTrain))]
 outputSboxHW = [hamming[s] for s in outputSbox]
@@ -71,7 +71,7 @@ plt.grid()
 # plt.show()
 
 features = []
-numFeatures = 50
+numFeatures = 3
 featureSpacing = 1
 for i in range(numFeatures):
     nextFeature = SumDiff.argmax()
@@ -121,6 +121,7 @@ for k in range(16):
 
         # Compute current GE and final_key
         tarefs = np.argsort(P_k)[::-1]
+        print(len(tarefs))
         ge[k] = list(tarefs).index(knownkey[0][k])
         final_key[k] = np.argsort(P_k)[-1]
 
