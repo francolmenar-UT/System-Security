@@ -1,6 +1,10 @@
 ########################### H5 to NPY File Variables ###########################
-CALC_NPY = False  # Convert the H5 file to NPY if True
+CALC_NPY = True  # Convert the H5 file to NPY if True
 H5_TRACES_P = "data/ASCAD/ATMega8515_raw_traces.h5"
+# H5_TRACES_P = "data/ASCAD/ASCAD_desync50.h5"
+# H5_TRACES_P = "data/ASCAD/ASCAD_desync100.h5"
+# H5_TRACES_P = "data/ASCAD/ASCAD.h5"
+
 
 ###########################  NPY File Variables ###########################
 TRACES = "traces"

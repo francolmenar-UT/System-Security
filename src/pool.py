@@ -30,6 +30,8 @@ def h5_to_npy(path_f):
         print("Error: can't open HDF5 file '%s' for reading (it might be malformed) ..." % path_f)
         sys.exit(-1)
 
+    # print(in_file.keys())
+
     # Get the Data from the H5 file
     raw_traces = in_file['traces'][()]
     raw_data = in_file['metadata']
@@ -234,6 +236,8 @@ def calc_features(sum_diff):
             # Set the Sum of the difference to 0
             sum_diff[j] = 0
 
+    print(features)
+    print(sum_diff)
     return features, sum_diff
 
 
