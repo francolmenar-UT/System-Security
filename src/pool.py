@@ -273,21 +273,21 @@ def calc_mean_cov_mat(means, features, traces_hw):
 def calc_ge_guess(traces_test, features, hamming, pt_test, mean_matrix, cov_matrix, known_key):
     """
     Calculates the GE and the Best Guess for each byte of the key analyzed
-    :param traces_test:
-    :param features:
-    :param hamming:
-    :param pt_test:
-    :param mean_matrix:
-    :param cov_matrix:
-    :param known_key:
-    :return:
+    :param traces_test: Traces to test
+    :param features: Features to be used
+    :param hamming: Hamming Weight Array set to 1s
+    :param pt_test: Plain text to be tested
+    :param mean_matrix: Matrix with the mean values
+    :param cov_matrix: Covariance matrix
+    :param known_key: The actual key used
+    :return: the Guessing Entropy and the 5 best key guesses as two lists
     """
     # Initialize the guessing entropy
     ge = np.zeros(KEY_BYTES)
     # Initialize the best guess
     best_guess = np.zeros(KEY_BYTES)
 
-    # Calculate the guessed key for the byte 7
+    # Calculate the guessed key for the attacked byte
     ge, best_guess = compute_key(traces_test, features, hamming, SBOX, pt_test,
                                  mean_matrix, cov_matrix, known_key, ge, best_guess, ATTACK_B)
 
