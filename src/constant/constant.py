@@ -1,5 +1,5 @@
 ########################### H5 to NPY File Variables ###########################
-CALC_NPY = True  # Convert the H5 file to NPY if True
+CALC_NPY = False  # Convert the H5 file to NPY if True
 H5_TRACES_P = "data/ASCAD/ATMega8515_raw_traces.h5"
 # H5_TRACES_P = "data/ASCAD/ASCAD_desync50.h5"
 # H5_TRACES_P = "data/ASCAD/ASCAD_desync100.h5"
@@ -37,11 +37,12 @@ DEBUG = True
 SUB_KEY_AMOUNT = 2  # Amount the sub-keys used
 HW_SIZE = 256  # Size of the HW array containing the results
 HW_MODEL_SIZE = 9  # The only possible values for HW are from 0-8
+EVAL_NUMB = 100 # nUMBER
 
 PROF_TRACES_NM = 9000
 ATTACK_TRACES_NM = 500
 
-NUM_FEATURES = 3
+NUM_FEATURES = 50
 FEATURE_SPACING = 1
 KEY_BYTES = 16
 ATTACK_B = 6

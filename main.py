@@ -15,8 +15,12 @@ def main():
 
 @main.command(help='')
 def run():
+    # List storing all the resulting key rank values from all the evaluations
+    rank_list = []
+
     # Firs Scenario
-    pool_atack(PROFILE_0, ATTACK_0)
+    for i in range(0, EVAL_NUMB):
+        rank_list.append(pool_atack(PROFILE_0, ATTACK_0))
 
     # Second Scenario
     # pool_atack(PROFILE_1, ATTACK_1)

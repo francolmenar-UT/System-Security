@@ -116,26 +116,14 @@ def compute_key(traces_test, features, hamming, sbox, pt_test, mean_matrix, cov_
         for k_guess in range(0, HW_SIZE):
             # Get the HW
             HW = hamming[sbox[pt_test[j][byte] ^ k_guess]]
+
+            # Compute pdf
+            rv = multivariate_normal(mean_matrix[HW], cov_matrix)
+
+            p_kj = rv.pdf(a)
+
             # Avoid -inf case
-            if HW != 0:
-                # Compute pdf
-                rv = multivariate_normal(mean_matrix[HW], cov_matrix)
-
-                p_kj = rv.pdf(a)
-
-                P_k[k_guess] += np.log(p_kj)
-            # If it is 0, we get the smallest value
-            else:
-                # Get the minimum value
-                min_prob = np.min(mean_matrix[np.nonzero(mean_matrix)])
-                # Set the shape of the minimum value
-                min_prob = [min_prob for i in range(len(features))]
-
-                # Compute pdf
-                rv = multivariate_normal(min_prob, cov_matrix)
-
-                p_kj = rv.pdf(a)
-
+            if p_kj != 0:
                 P_k[k_guess] += np.log(p_kj)
 
         # Compute current GE and best_guess
@@ -376,7 +364,7 @@ def pool_atack(profile_size, attack_size):
     print_result(best_guess, knownkey, ge, ATTACK_B) if DEBUG else None
 
     # Compares the 5 most likely guesses with the correct key
-    comp_res = comp_result(knownkey, best_guess, ATTACK_B)
+    rank = comp_result(knownkey, best_guess, ATTACK_B)
 
-    print(comp_res)
+    print(rank)
     return 0
