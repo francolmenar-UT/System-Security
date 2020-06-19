@@ -297,10 +297,8 @@ def calc_ge_guess(traces_test, features, hamming, pt_test, mean_matrix, cov_matr
     return ge, best_guess
 
 
-def comp_result(knownkey, best_guess):
-    # print(knownkey)
-    # print(best_guess)
-    return 0
+def comp_result(known_key, best_guess, byte):
+    return 1 if known_key[0][byte] in best_guess else 0
 
 
 def pool_atack(profile_size, attack_size):
@@ -371,7 +369,7 @@ def pool_atack(profile_size, attack_size):
     print_result(best_guess, knownkey, ge, ATTACK_B) if DEBUG else None
 
     # Compares the 5 most likely guesses with the correct key
-    comp_res = comp_result(knownkey, best_guess)
+    comp_res = comp_result(knownkey, best_guess, ATTACK_B)
 
     print(comp_res)
     return 0
