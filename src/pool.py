@@ -2,6 +2,8 @@ import sys
 
 import h5py
 from scipy.stats import multivariate_normal
+
+from src.functions.bbs import bbs_suf
 from src.functions.func import *
 
 import matplotlib.pyplot as plt
@@ -30,14 +32,39 @@ def h5_to_npy(path_f):
         print("Error: can't open HDF5 file '%s' for reading (it might be malformed) ..." % path_f)
         sys.exit(-1)
 
-    # print(in_file.keys())
+    """
+    print(in_file.keys())
+
+    aux = in_file['Profiling_traces']
+
+    print(aux.keys())
+
+    aux1 = aux['labels']
+    print(aux1[0])
+
+    aux2 = aux['metadata']
+    print(aux2[0])
+
+    aux3 = aux['traces']
+    print(aux3[0])
+    """
 
     # Get the Data from the H5 file
     raw_traces = in_file['traces'][()]
+
+    # print(raw_traces[0])
+
     raw_data = in_file['metadata']
 
+    # print(raw_data[0])
+
     raw_plaintexts = raw_data['plaintext'][()]
+
+    # print(raw_plaintexts[0])
+
     raw_keys = raw_data['key'][()]
+
+    # print(raw_keys[0])
 
     # Save H5 data as a Numpy Array into the defined folders
     np.save(DATA_NPY + TRACES + NPY, raw_traces)
@@ -324,12 +351,8 @@ def pool_atack(profile_size, attack_size):
     # Initialize the Hamming Weight Array
     hamming = [bin(n).count("1") for n in range(HW_SIZE)]
 
-    # Get the actual traces to be used from the total amount of traces
-    tracesTrain = traces[0:profile_size]
-    ptTrain = pt[0:profile_size]
-
-    tracesTest = traces[profile_size:(profile_size + attack_size)]
-    ptTest = pt[profile_size:(profile_size + attack_size)]
+    # Obtain the traces to be used by BBS Shuffling
+    tracesTrain, ptTrain, tracesTest, ptTest = bbs_suf(profile_size, attack_size, traces, pt)
 
     # Calculate the output of the S box
     outputSbox = [SBOX[ptTrain[i][0] ^ knownkey[i][0]] for i in range(len(ptTrain))]
