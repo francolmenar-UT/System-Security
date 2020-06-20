@@ -161,6 +161,10 @@ class BlumBlumShub(object):
 
 
 def bbs_suf(profile_size, attack_size, traces, pt):
+    # Get the train traces
+    tracesTrain = traces[0:profile_size]
+    ptTrain = pt[0:profile_size]
+
     traces_len = len(traces)
     bit_length = traces_len.bit_length()
 
@@ -179,10 +183,7 @@ def bbs_suf(profile_size, attack_size, traces, pt):
     if rdn + profile_size + attack_size > traces_len:
         print("Magic")
     else:
-        # Get the actual traces to be used from the total amount of traces
-        tracesTrain = traces[0:profile_size]
-        ptTrain = pt[0:profile_size]
-
         tracesTest = traces[profile_size:(profile_size + attack_size)]
         ptTest = pt[profile_size:(profile_size + attack_size)]
+
         return tracesTrain, ptTrain, tracesTest, ptTest

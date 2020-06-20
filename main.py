@@ -19,8 +19,7 @@ def run():
     rank_list = []
 
     # Firs Scenario
-    for i in range(0, EVAL_NUMB):
-        rank_list.append(pool_atack(PROFILE_0, ATTACK_0))
+    rank_list.append(pool_atack(PROFILE_0, ATTACK_0))
 
     # Second Scenario
     # pool_atack(PROFILE_1, ATTACK_1)

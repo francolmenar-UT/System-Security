@@ -38,7 +38,7 @@ SUB_KEY_AMOUNT = 2  # Amount the sub-keys used
 HW_SIZE = 256  # Size of the HW array containing the results
 HW_MODEL_SIZE = 9  # The only possible values for HW are from 0-8
 # EVAL_NUMB = 100 # Number of evaluations
-EVAL_NUMB = 1 # Number of evaluations TEST
+EVAL_NUMB = 1  # Number of evaluations TEST
 
 PROF_TRACES_NM = 9000
 ATTACK_TRACES_NM = 500

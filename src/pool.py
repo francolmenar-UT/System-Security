@@ -81,9 +81,9 @@ def load_data():
     # Load the data from the NPY files
     traces = np.load(DATA_NPY + TRACES + NPY)
     pt = np.load(DATA_NPY + PLAIN + NPY)
-    knownkey = np.load(DATA_NPY + KEY + NPY)
+    known_key = np.load(DATA_NPY + KEY + NPY)
 
-    return traces, pt, knownkey
+    return traces, pt, known_key
 
 
 def compute_tracesHW(traces_train, output_sbox_hw):
@@ -332,30 +332,20 @@ def comp_result(known_key, best_guess, byte):
     return 1 if known_key[0][byte] in best_guess else 0
 
 
-def pool_atack(profile_size, attack_size):
+def pool_calc(profile_size, attack_size, traces, pt, hamming, known_key):
     """
-    Performs the Pooled Template Attack
-    :param profile_size: Amount of measurements for profiling
-    :param attack_size: Amount of measurements for attacking
+    TODO
+    :param profile_size: 
+    :param attack_size: 
+    :param traces: 
+    :param pt: 
+    :return: 
     """
-    # Check if all the needed folders are created
-    for folder in FOLDERS:
-        create_folder(folder)
-
-    # Convert the h5 file to npy to ease its use
-    h5_to_npy(H5_TRACES_P) if CALC_NPY else None
-
-    # Load the NPY data
-    traces, pt, knownkey = load_data()
-
-    # Initialize the Hamming Weight Array
-    hamming = [bin(n).count("1") for n in range(HW_SIZE)]
-
     # Obtain the traces to be used by BBS Shuffling
     tracesTrain, ptTrain, tracesTest, ptTest = bbs_suf(profile_size, attack_size, traces, pt)
 
     # Calculate the output of the S box
-    outputSbox = [SBOX[ptTrain[i][0] ^ knownkey[i][0]] for i in range(len(ptTrain))]
+    outputSbox = [SBOX[ptTrain[i][0] ^ known_key[i][0]] for i in range(len(ptTrain))]
     # Set the Output of the Sbox to HW
     outputSboxHW = [hamming[s] for s in outputSbox]
 
@@ -382,12 +372,40 @@ def pool_atack(profile_size, attack_size):
     covMatrix = calc_mean_cov(covMatrix)
 
     # Calculate the GE and the Best Guess for each key byte analyzed
-    ge, best_guess = calc_ge_guess(tracesTest, features, hamming, ptTest, meanMatrix, covMatrix, knownkey)
+    ge, best_guess = calc_ge_guess(tracesTest, features, hamming, ptTest, meanMatrix, covMatrix, known_key)
 
-    print_result(best_guess, knownkey, ge, ATTACK_B) if DEBUG else None
+    print_result(best_guess, known_key, ge, ATTACK_B) if DEBUG else None
 
     # Compares the 5 most likely guesses with the correct key
-    rank = comp_result(knownkey, best_guess, ATTACK_B)
+    rank = comp_result(known_key, best_guess, ATTACK_B)
 
-    print(rank)
-    return 0
+    return [rank, ge, best_guess]
+
+
+def pool_atack(profile_size, attack_size):
+    """
+    Performs the Pooled Template Attack
+    :param profile_size: Amount of measurements for profiling
+    :param attack_size: Amount of measurements for attacking
+    """
+    # Check if all the needed folders are created
+    for folder in FOLDERS:
+        create_folder(folder)
+
+    # Convert the h5 file to npy to ease its use
+    h5_to_npy(H5_TRACES_P) if CALC_NPY else None
+
+    # Load the NPY data
+    traces, pt, known_key = load_data()
+
+    # List which will store the results of the Pool Evaluations
+    results = []
+
+    # Run the pooled calculations EVAL_NUMB times
+    for i in range(0, EVAL_NUMB):
+        # Initialize the Hamming Weight Array
+        hamming = [bin(n).count("1") for n in range(HW_SIZE)]
+
+        results.append(pool_calc(profile_size, attack_size, traces, pt, hamming, known_key))
+
+    return results
