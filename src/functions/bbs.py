@@ -5,6 +5,7 @@ From https://github.com/VSpike/BBS
 
 import random
 from decimal import *
+import numpy as np
 
 
 def bitLen(x):
@@ -160,30 +161,33 @@ class BlumBlumShub(object):
         return result
 
 
-def bbs_suf(profile_size, attack_size, traces, pt):
+def bbs_suf(profile_size, attack_size, traces, pt, attack_num):
+    # TODO Comment
+
     # Get the train traces
     tracesTrain = traces[0:profile_size]
+
     ptTrain = pt[0:profile_size]
+
+    tracesTest, ptTest = [], []
 
     traces_len = len(traces)
     bit_length = traces_len.bit_length()
 
     # Create a BlumBlumShub number with the given bit number
     bbs = BlumBlumShub(bit_length)
+    attack_list = []
 
-    # To get the number in the space of the Traces length
-    rdn = bbs.next(bit_length) % traces_len
+    for i in range(0, attack_num):
+        # To get the number in the space of the Traces length
+        rdn = bbs.next(bit_length) % attack_size
 
-    print(rdn)
-    print(profile_size)
-    print(attack_size)
-    print(traces_len)
+        while rdn in attack_list:
+            rdn = bbs.next(bit_length) % attack_size
 
-    # Check if the traces go over the end, so use modular arithmetics to adjust the indexes
-    if rdn + profile_size + attack_size > traces_len:
-        print("Magic")
-    else:
-        tracesTest = traces[profile_size:(profile_size + attack_size)]
-        ptTest = pt[profile_size:(profile_size + attack_size)]
+        attack_list.append(rdn)
 
-        return tracesTrain, ptTrain, tracesTest, ptTest
+        tracesTest.append(traces[profile_size + rdn])
+        ptTest.append(pt[profile_size + rdn])
+
+    return tracesTrain, ptTrain, tracesTest, ptTest, attack_list

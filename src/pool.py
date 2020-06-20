@@ -251,8 +251,6 @@ def calc_features(sum_diff):
             # Set the Sum of the difference to 0
             sum_diff[j] = 0
 
-    print(features)
-    print(sum_diff)
     return features, sum_diff
 
 
@@ -341,8 +339,11 @@ def pool_calc(profile_size, attack_size, traces, pt, hamming, known_key):
     :param pt: 
     :return: 
     """
+    # TODO pass attack_list to bbs_suf so it can be rerun without executing everything again
+    # TODO pass attack_list to pool_calc from the main method, and make it return it
+
     # Obtain the traces to be used by BBS Shuffling
-    tracesTrain, ptTrain, tracesTest, ptTest = bbs_suf(profile_size, attack_size, traces, pt)
+    tracesTrain, ptTrain, tracesTest, ptTest, attack_list = bbs_suf(profile_size, attack_size, traces, pt, 10)
 
     # Calculate the output of the S box
     outputSbox = [SBOX[ptTrain[i][0] ^ known_key[i][0]] for i in range(len(ptTrain))]
@@ -406,6 +407,7 @@ def pool_atack(profile_size, attack_size):
         # Initialize the Hamming Weight Array
         hamming = [bin(n).count("1") for n in range(HW_SIZE)]
 
+        # Perform the Pooled TA for each evaluation
         results.append(pool_calc(profile_size, attack_size, traces, pt, hamming, known_key))
 
     return results
