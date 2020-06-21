@@ -7,6 +7,8 @@ import random
 from decimal import *
 import numpy as np
 
+from src.constant.constant import PRIME_LEN
+
 
 def is_prime(n, t=128):
     """
@@ -126,20 +128,14 @@ class BlumBlumShub(object):
 
         self.setSeed(self.calc_seed())  # Set the seed
 
-        print(self.n)
-        print(self.p)
-        print(self.q)
-        print(self.state)
-
     def calc_seed(self):
         length = self.n.bit_length()
         seed = 0
 
-        while seed == 0 or seed == 1 or seed % self.p == 0 or seed % self.q == 0\
+        while seed == 0 or seed == 1 or seed % self.p == 0 or seed % self.q == 0 \
                 or seed % self.n == 0 or seed % self.n == 1:
             seed = random.getrandbits(length)
 
-        print("Seed {}".format(seed))
         return seed
 
     def setSeed(self, seed):
@@ -176,48 +172,58 @@ def bbs_suf(profile_size, attack_size, traces, pt, attack_num):
     :param attack_num:
     :return:
     """
-    print(attack_size)
-    print(attack_num)
-
     # Get the train traces
     traces_train = traces[0:profile_size]
     pt_train = pt[0:profile_size]
 
     # Use all the values, then it is not needed to calculate the random values
     if attack_num == attack_size:
-        tracesTest = traces[profile_size:profile_size + attack_size]
-        ptTest = pt[profile_size:profile_size + attack_size]
+        traces_test = traces[profile_size:profile_size + attack_size]
+        pt_test = pt[profile_size:profile_size + attack_size]
 
-        return traces_train, pt_train, tracesTest, ptTest
+        return traces_train, pt_train, traces_test, pt_test
+    # Check if the number of attack traces to use is larger than the half of the total attack traces
+    # If reverse is True, the random numbers calculated are the only traces not used
+    reverse = True if attack_num > int(attack_size / 2) else False
 
     # Initialize Test Variables - traces and plaintext
-    tracesTest, ptTest = [], []
+    traces_test, pt_test = [], []
 
-    # Length of the
+    # Length of the last attack trace in bits
     bit_length = int(attack_size.bit_length())
-    print(bit_length)
-    print("Inside")
 
     # Create a BlumBlumShub number with the given bit number
-    bbs = BlumBlumShub(100)
-    attack_list = []
+    bbs = BlumBlumShub(PRIME_LEN)
+    # List containing the random numbers generated
+    rdn_list = []
 
-    for i in range(0, attack_num):
+    # The amount of random numbers created depends on reverse
+    rdn_to_gen = attack_size - attack_num if reverse else attack_num
+
+    # For each random number to generate
+    rdn_count = 0
+    while rdn_count < rdn_to_gen:
+        # Generate the new random number
         next_nm = bbs.next(bit_length)
-        print(next_nm)
         # To get the number in the space of the Traces length
         rdn = next_nm % attack_size
 
-        print(next_nm)
-
-        while rdn in attack_list:
-            # print(rdn)
-            # print(attack_list)
+        # Same number generated
+        while rdn in rdn_list:
             rdn = bbs.next(bit_length) % attack_size
 
-        attack_list.append(rdn)
+        # Save the new number created
+        rdn_list.append(rdn)
 
-        tracesTest.append(traces[profile_size + rdn])
-        ptTest.append(pt[profile_size + rdn])
+        rdn_count += 1
 
-    return traces_train, pt_train, tracesTest, ptTest
+    # If reverse is true we take all the elements which are not in the random list
+    if reverse:
+        rdn_list = list(set(range(0, attack_size)) - set(rdn_list))
+
+    # Add the attack traces 
+    for num in rdn_list:
+        traces_test.append(traces[profile_size + num])
+        pt_test.append(pt[profile_size + num])
+
+    return traces_train, pt_train, traces_test, pt_test

@@ -86,7 +86,7 @@ def load_data():
     return traces, pt, known_key
 
 
-def compute_tracesHW(traces_train, output_sbox_hw):
+def compute_traces_hw(traces_train, output_sbox_hw):
     """
     Calculates the HW for all the traces
     :param traces_train: Traces used to train
@@ -184,7 +184,7 @@ def compute_key(traces_test, features, hamming, sbox, pt_test, mean_matrix, cov_
     final_guesses = list(reversed(list_guesses))
     final_ge = list(reversed(list_ge))
 
-    return final_ge[0:5], final_guesses[0:5]
+    return final_ge[0:KEY_RANK], final_guesses[0:KEY_RANK]
 
 
 def calc_mean(traces_train, traces_hw):
@@ -342,25 +342,22 @@ def pool_calc(profile_size, attack_size, traces, pt, known_key, hamming, attack_
     :param pt: 
     :return: 
     """
-    print("Before bbf")
     # Obtain the traces to be used by BBS Shuffling
-    traces_train, pt_train, tracesTest, ptTest = bbs_suf(profile_size, attack_size, traces, pt, attack_size_i)
-    print("After bbf")
+    traces_train, pt_train, traces_test, pt_test = bbs_suf(profile_size, attack_size, traces, pt, attack_size_i)
 
     # Calculate the output of the S box
-    outputSbox = [SBOX[pt_train[i][0] ^ known_key[i][0]] for i in range(len(pt_train))]
+    output_sbox = [SBOX[pt_train[i][0] ^ known_key[i][0]] for i in range(len(pt_train))]
     # Set the Output of the Sbox to HW
-    outputSboxHW = [hamming[s] for s in outputSbox]
+    output_sbox_hw = [hamming[s] for s in output_sbox]
 
     # Compute the HW value for the traces
-    traces_hw = compute_tracesHW(traces_train, outputSboxHW)
+    traces_hw = compute_traces_hw(traces_train, output_sbox_hw)
 
     # Compute the Mean values from the HW
     means = calc_mean(traces_train, traces_hw)
+    
     # Compute the Sum of the Difference
     SumDiff = calc_sum_diff(traces_train, means)
-
-    print("After diff")
 
     # Calculate the features and update SumDiff
     features, SumDiff = calc_features(SumDiff)
@@ -372,7 +369,7 @@ def pool_calc(profile_size, attack_size, traces, pt, known_key, hamming, attack_
     cov_matrix = calc_mean_cov(cov_matrix)
 
     # Calculate the GE and the Best Guess for each key byte analyzed
-    ge, best_guess = calc_ge_guess(tracesTest, features, hamming, ptTest, mean_matrix, cov_matrix, known_key)
+    ge, best_guess = calc_ge_guess(traces_test, features, hamming, pt_test, mean_matrix, cov_matrix, known_key)
 
     print_result(best_guess, known_key, ge, ATTACK_B) if DEBUG else None
 
@@ -414,7 +411,6 @@ def pool_atack(profile_size, attack_size):
 
     # Go through each Execution step
     for attack_size_i in range(EXE_STEP, attack_size + EXE_STEP, EXE_STEP):
-        print(attack_size_i)
 
         # Temporal list to store the results from the current execution step
         temp_results = []
@@ -423,7 +419,6 @@ def pool_atack(profile_size, attack_size):
         current_eval = 0
         # Run the pooled calculations EVAL_NUMB times
         while current_eval <= EVAL_NUMB:
-            print(current_eval)
             # Initialize the Hamming Weight Array TODO Double check that removing this is correct
             # hamming = [bin(n).count("1") for n in range(HW_SIZE)]
 
