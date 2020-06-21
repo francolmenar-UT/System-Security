@@ -21,8 +21,6 @@ def run():
     # Firs Scenario
     rank_list.append(pool_atack(PROFILE_0, ATTACK_0))
 
-    print(rank_list)
-
     print(rank_list[0])
 
     # Second Scenario

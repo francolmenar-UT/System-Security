@@ -8,21 +8,6 @@ from decimal import *
 import numpy as np
 
 
-def bitLen(x):
-    """
-    Get the bit length of a positive number
-
-    :param x: Value to be evaluated
-    :return: The length of bits
-    """
-    assert x > 0
-    q = 0
-    while x:
-        q += 1
-        x >>= 1
-    return q
-
-
 def is_prime(n, t=128):
     """
     Check if a number is prime or not
@@ -112,13 +97,19 @@ def generateN(bits):
     :param bits: The number of bits of security
     :return: N = p * q
     """
+    # Adjust the bit number when it's not multiple of 2
+    if bits % 2 != 0:
+        first_bits = int(bits / 2)
+        second_bits = first_bits + 1
+    else:
+        first_bits, second_bits = int(bits / 2), int(bits / 2)
 
-    p = get_bbs_prime(bits / 2)
+    p = get_bbs_prime(first_bits)
     while 1:
-        q = get_bbs_prime(bits / 2)
+        q = get_bbs_prime(second_bits)
         # make sure p != q (almost always true, but just in case, check)
         if p != q:
-            return p * q
+            return p * q, p, q
 
 
 class BlumBlumShub(object):
@@ -129,13 +120,27 @@ class BlumBlumShub(object):
 
         :param bits: Number of bits
         """
-        self.n = generateN(bits)
-
-        length = bitLen(self.n)
-        seed = random.getrandbits(length)
+        self.n, self.p, self.q = generateN(bits)
 
         self.state = None  # To avoid warnings
-        self.setSeed(seed)  # Set the seed
+
+        self.setSeed(self.calc_seed())  # Set the seed
+
+        print(self.n)
+        print(self.p)
+        print(self.q)
+        print(self.state)
+
+    def calc_seed(self):
+        length = self.n.bit_length()
+        seed = 0
+
+        while seed == 0 or seed == 1 or seed % self.p == 0 or seed % self.q == 0\
+                or seed % self.n == 0 or seed % self.n == 1:
+            seed = random.getrandbits(length)
+
+        print("Seed {}".format(seed))
+        return seed
 
     def setSeed(self, seed):
         """
@@ -155,7 +160,7 @@ class BlumBlumShub(object):
 
         result = 0
         for i in range(num_bits):
-            self.state = (self.state ** 2) % self.n
+            self.state = pow(self.state, 2, self.n)
             result = (result << 1) | (self.state & 1)
 
         return result
@@ -171,27 +176,43 @@ def bbs_suf(profile_size, attack_size, traces, pt, attack_num):
     :param attack_num:
     :return:
     """
+    print(attack_size)
+    print(attack_num)
 
     # Get the train traces
-    tracesTrain = traces[0:profile_size]
-    ptTrain = pt[0:profile_size]
+    traces_train = traces[0:profile_size]
+    pt_train = pt[0:profile_size]
+
+    # Use all the values, then it is not needed to calculate the random values
+    if attack_num == attack_size:
+        tracesTest = traces[profile_size:profile_size + attack_size]
+        ptTest = pt[profile_size:profile_size + attack_size]
+
+        return traces_train, pt_train, tracesTest, ptTest
 
     # Initialize Test Variables - traces and plaintext
     tracesTest, ptTest = [], []
 
     # Length of the
-    traces_len = len(traces)
-    bit_length = traces_len.bit_length()
+    bit_length = int(attack_size.bit_length())
+    print(bit_length)
+    print("Inside")
 
     # Create a BlumBlumShub number with the given bit number
-    bbs = BlumBlumShub(bit_length)
+    bbs = BlumBlumShub(100)
     attack_list = []
 
     for i in range(0, attack_num):
+        next_nm = bbs.next(bit_length)
+        print(next_nm)
         # To get the number in the space of the Traces length
-        rdn = bbs.next(bit_length) % attack_size
+        rdn = next_nm % attack_size
+
+        print(next_nm)
 
         while rdn in attack_list:
+            # print(rdn)
+            # print(attack_list)
             rdn = bbs.next(bit_length) % attack_size
 
         attack_list.append(rdn)
@@ -199,4 +220,4 @@ def bbs_suf(profile_size, attack_size, traces, pt, attack_num):
         tracesTest.append(traces[profile_size + rdn])
         ptTest.append(pt[profile_size + rdn])
 
-    return tracesTrain, ptTrain, tracesTest, ptTest
+    return traces_train, pt_train, tracesTest, ptTest

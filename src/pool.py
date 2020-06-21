@@ -94,17 +94,17 @@ def compute_tracesHW(traces_train, output_sbox_hw):
     :return: The HW value for all the traces as a list of np arrays
     """
     # Initialize the HW parameter
-    TracesHW = [[] for _ in range(HW_MODEL_SIZE)]
+    traces_hw = [[] for _ in range(HW_MODEL_SIZE)]
 
     # Go through all the traces
     for i in range(len(traces_train)):
         # Get the output of the Sbox
         HW = output_sbox_hw[i]
         # In the position of the output value from the Sbox append the actual trace
-        TracesHW[HW].append(traces_train[i])
+        traces_hw[HW].append(traces_train[i])
 
     # Convert the list of lists containing the HW values to a list of np arrays
-    result = [np.array(TracesHW[HW]) for HW in range(HW_MODEL_SIZE)]
+    result = [np.array(traces_hw[HW]) for HW in range(HW_MODEL_SIZE)]
 
     return result
 
@@ -277,17 +277,17 @@ def calc_mean_cov_mat(means, features, traces_hw):
     :return: The matrices for the mean and for the covariance
     """
     # Initialize the matrix of means to zero
-    meanMatrix = np.zeros((HW_MODEL_SIZE, NUM_FEATURES))
+    mean_matrix = np.zeros((HW_MODEL_SIZE, NUM_FEATURES))
 
     # Initialize the matrix of covariance to zero - Square matrix of length of the number of features
-    covMatrix = np.zeros((NUM_FEATURES, NUM_FEATURES))
+    cov_matrix = np.zeros((NUM_FEATURES, NUM_FEATURES))
 
     # Go through the HW values
     for HW in range(HW_MODEL_SIZE):
         # For each HW value  go through every feature
         for i in range(NUM_FEATURES):
             # Assign the value to the mean matrix
-            meanMatrix[HW][i] = means[HW][features[i]]
+            mean_matrix[HW][i] = means[HW][features[i]]
 
             for j in range(NUM_FEATURES):
                 # TODO Check what is happening here
@@ -297,9 +297,9 @@ def calc_mean_cov_mat(means, features, traces_hw):
                 # Calculate the covariance value
                 c = cov(x, y)
                 # Sum the covariance value to the place in the covariance matrix
-                covMatrix[i, j] += c
+                cov_matrix[i, j] += c
 
-    return meanMatrix, covMatrix
+    return mean_matrix, cov_matrix
 
 
 def calc_ge_guess(traces_test, features, hamming, pt_test, mean_matrix, cov_matrix, known_key):
@@ -342,33 +342,37 @@ def pool_calc(profile_size, attack_size, traces, pt, known_key, hamming, attack_
     :param pt: 
     :return: 
     """
+    print("Before bbf")
     # Obtain the traces to be used by BBS Shuffling
-    tracesTrain, ptTrain, tracesTest, ptTest = bbs_suf(profile_size, attack_size, traces, pt, attack_size_i)
+    traces_train, pt_train, tracesTest, ptTest = bbs_suf(profile_size, attack_size, traces, pt, attack_size_i)
+    print("After bbf")
 
     # Calculate the output of the S box
-    outputSbox = [SBOX[ptTrain[i][0] ^ known_key[i][0]] for i in range(len(ptTrain))]
+    outputSbox = [SBOX[pt_train[i][0] ^ known_key[i][0]] for i in range(len(pt_train))]
     # Set the Output of the Sbox to HW
     outputSboxHW = [hamming[s] for s in outputSbox]
 
     # Compute the HW value for the traces
-    TracesHW = compute_tracesHW(tracesTrain, outputSboxHW)
+    traces_hw = compute_tracesHW(traces_train, outputSboxHW)
 
     # Compute the Mean values from the HW
-    Means = calc_mean(tracesTrain, TracesHW)
+    means = calc_mean(traces_train, traces_hw)
     # Compute the Sum of the Difference
-    SumDiff = calc_sum_diff(tracesTrain, Means)
+    SumDiff = calc_sum_diff(traces_train, means)
+
+    print("After diff")
 
     # Calculate the features and update SumDiff
     features, SumDiff = calc_features(SumDiff)
 
     # Calculate the matrices from the mean and the covariances
-    meanMatrix, covMatrix = calc_mean_cov_mat(Means, features, TracesHW)
+    mean_matrix, cov_matrix = calc_mean_cov_mat(means, features, traces_hw)
 
     # Calculate the mean of the covariance values
-    covMatrix = calc_mean_cov(covMatrix)
+    cov_matrix = calc_mean_cov(cov_matrix)
 
     # Calculate the GE and the Best Guess for each key byte analyzed
-    ge, best_guess = calc_ge_guess(tracesTest, features, hamming, ptTest, meanMatrix, covMatrix, known_key)
+    ge, best_guess = calc_ge_guess(tracesTest, features, hamming, ptTest, mean_matrix, cov_matrix, known_key)
 
     print_result(best_guess, known_key, ge, ATTACK_B) if DEBUG else None
 
@@ -410,6 +414,8 @@ def pool_atack(profile_size, attack_size):
 
     # Go through each Execution step
     for attack_size_i in range(EXE_STEP, attack_size + EXE_STEP, EXE_STEP):
+        print(attack_size_i)
+
         # Temporal list to store the results from the current execution step
         temp_results = []
 
@@ -417,11 +423,13 @@ def pool_atack(profile_size, attack_size):
         current_eval = 0
         # Run the pooled calculations EVAL_NUMB times
         while current_eval <= EVAL_NUMB:
+            print(current_eval)
             # Initialize the Hamming Weight Array TODO Double check that removing this is correct
             # hamming = [bin(n).count("1") for n in range(HW_SIZE)]
 
             # Perform the Pooled TA for each evaluation
             temp_results.append(pool_calc(profile_size, attack_size, traces, pt, known_key, hamming, attack_size_i))
+            current_eval += 1
 
         # Add the results for the current execution step
         results.append([temp_results, attack_size_i])
