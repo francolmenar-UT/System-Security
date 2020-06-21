@@ -330,20 +330,20 @@ def comp_result(known_key, best_guess, byte):
     return 1 if known_key[0][byte] in best_guess else 0
 
 
-def pool_calc(profile_size, attack_size, traces, pt, hamming, known_key):
+def pool_calc(profile_size, attack_size, traces, pt, known_key, hamming, attack_size_i):
     """
     TODO
-    :param profile_size: 
+    :param attack_size_i:
+    :param known_key:
+    :param hamming:
+    :param profile_size:
     :param attack_size: 
     :param traces: 
     :param pt: 
     :return: 
     """
-    # TODO pass attack_list to bbs_suf so it can be rerun without executing everything again
-    # TODO pass attack_list to pool_calc from the main method, and make it return it
-
     # Obtain the traces to be used by BBS Shuffling
-    tracesTrain, ptTrain, tracesTest, ptTest, attack_list = bbs_suf(profile_size, attack_size, traces, pt, 10)
+    tracesTrain, ptTrain, tracesTest, ptTest = bbs_suf(profile_size, attack_size, traces, pt, attack_size_i)
 
     # Calculate the output of the S box
     outputSbox = [SBOX[ptTrain[i][0] ^ known_key[i][0]] for i in range(len(ptTrain))]
@@ -357,11 +357,6 @@ def pool_calc(profile_size, attack_size, traces, pt, hamming, known_key):
     Means = calc_mean(tracesTrain, TracesHW)
     # Compute the Sum of the Difference
     SumDiff = calc_sum_diff(tracesTrain, Means)
-
-    # Plot stuff TODO Probably remove this
-    plt.plot(SumDiff)
-    plt.grid()
-    # plt.show()
 
     # Calculate the features and update SumDiff
     features, SumDiff = calc_features(SumDiff)
@@ -386,6 +381,9 @@ def pool_calc(profile_size, attack_size, traces, pt, hamming, known_key):
 def pool_atack(profile_size, attack_size):
     """
     Performs the Pooled Template Attack
+    This method mainly set the step and evaluation counter
+    And calls to  pool_calc which actually performs the attack
+
     :param profile_size: Amount of measurements for profiling
     :param attack_size: Amount of measurements for attacking
     """
@@ -399,15 +397,33 @@ def pool_atack(profile_size, attack_size):
     # Load the NPY data
     traces, pt, known_key = load_data()
 
+    # Initialize the Hamming Weight Array
+    hamming = [bin(n).count("1") for n in range(HW_SIZE)]
+
     # List which will store the results of the Pool Evaluations
     results = []
 
-    # Run the pooled calculations EVAL_NUMB times
-    for i in range(0, EVAL_NUMB):
-        # Initialize the Hamming Weight Array
-        hamming = [bin(n).count("1") for n in range(HW_SIZE)]
+    # Check for wrong Execution Steps
+    if attack_size % EXE_STEP != 0:
+        print("The execution step is not a divisor of the attack length")
+        return -1
 
-        # Perform the Pooled TA for each evaluation
-        results.append(pool_calc(profile_size, attack_size, traces, pt, hamming, known_key))
+    # Go through each Execution step
+    for attack_size_i in range(EXE_STEP, attack_size + EXE_STEP, EXE_STEP):
+        # Temporal list to store the results from the current execution step
+        temp_results = []
+
+        # Reset the evaluation counter
+        current_eval = 0
+        # Run the pooled calculations EVAL_NUMB times
+        while current_eval <= EVAL_NUMB:
+            # Initialize the Hamming Weight Array TODO Double check that removing this is correct
+            # hamming = [bin(n).count("1") for n in range(HW_SIZE)]
+
+            # Perform the Pooled TA for each evaluation
+            temp_results.append(pool_calc(profile_size, attack_size, traces, pt, known_key, hamming, attack_size_i))
+
+        # Add the results for the current execution step
+        results.append([temp_results, attack_size_i])
 
     return results

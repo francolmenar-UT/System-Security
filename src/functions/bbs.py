@@ -162,15 +162,24 @@ class BlumBlumShub(object):
 
 
 def bbs_suf(profile_size, attack_size, traces, pt, attack_num):
-    # TODO Comment
+    """
+    TODO
+    :param profile_size:
+    :param attack_size:
+    :param traces:
+    :param pt:
+    :param attack_num:
+    :return:
+    """
 
     # Get the train traces
     tracesTrain = traces[0:profile_size]
-
     ptTrain = pt[0:profile_size]
 
+    # Initialize Test Variables - traces and plaintext
     tracesTest, ptTest = [], []
 
+    # Length of the
     traces_len = len(traces)
     bit_length = traces_len.bit_length()
 
@@ -190,4 +199,4 @@ def bbs_suf(profile_size, attack_size, traces, pt, attack_num):
         tracesTest.append(traces[profile_size + rdn])
         ptTest.append(pt[profile_size + rdn])
 
-    return tracesTrain, ptTrain, tracesTest, ptTest, attack_list
+    return tracesTrain, ptTrain, tracesTest, ptTest
