@@ -5,7 +5,6 @@ From https://github.com/VSpike/BBS
 
 import random
 from decimal import *
-import numpy as np
 
 from src.constant.constant import PRIME_LEN, NOISE
 
@@ -129,6 +128,10 @@ class BlumBlumShub(object):
         self.setSeed(self.calc_seed())  # Set the seed
 
     def calc_seed(self):
+        """
+        Calculates a correct seed for the BBS
+        :return:
+        """
         length = self.n.bit_length()
         seed = 0
 
@@ -150,7 +153,7 @@ class BlumBlumShub(object):
     def next(self, num_bits):
         """
         Returns up to numBit random bits
-        :param num_bits:
+        :param num_bits: Maximum amount of bits for the random number generated
         :return: The resulting pseudorandom number
         """
 
@@ -162,26 +165,16 @@ class BlumBlumShub(object):
         return result
 
 
-def add_uniform_noise(trace, noise_level):
-    new_trace = np.ones_like(trace)
-
-    for i in range(0, len(trace)):
-        level = random.randint(noise_level[0], noise_level[1])
-        new_trace[i] = trace[i] + level
-
-    return new_trace
-
-
 def bbs_suf(profile_size, attack_size, traces, pt, attack_num, noise):
     """
-    TODO
-    :param noise:
-    :param profile_size:
-    :param attack_size:
-    :param traces:
-    :param pt:
-    :param attack_num:
-    :return:
+    Performs the BBS Blum Blum Shub returning the traces to be used for the attack
+
+    :param noise: Boolean describing if there is going to be added noise in the traces
+    :param profile_size: Amount of measurements for profiling
+    :param attack_size: Amount of measurements for attacking
+    :param traces: Traces to attack
+    :param pt: Plain text
+    :param attack_num: Amount of attack traces to be used
     """
     # Get the train traces
     traces_train = traces[0:profile_size]
@@ -193,6 +186,7 @@ def bbs_suf(profile_size, attack_size, traces, pt, attack_num, noise):
         pt_test = pt[profile_size:profile_size + attack_size]
 
         return traces_train, pt_train, traces_test, pt_test
+
     # Check if the number of attack traces to use is larger than the half of the total attack traces
     # If reverse is True, the random numbers calculated are the only traces not used
     reverse = True if attack_num > int(attack_size / 2) else False

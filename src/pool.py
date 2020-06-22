@@ -14,6 +14,7 @@ from src.constant.constant import *
 def cov(x, y):
     """
     Calculates the covariance from two numbers
+
     :param x:
     :param y:
     :return:
@@ -24,6 +25,7 @@ def cov(x, y):
 def h5_to_npy(path_f):
     """
     Save the H5 file into the different NPY files to be used
+
     :param path_f: Path to the H5 file
     """
     try:
@@ -76,6 +78,7 @@ def h5_to_npy(path_f):
 def load_data():
     """
     Load the data from the NPY files
+
     :return: Three np arrays representing the traces, the plain text and the key
     """
     # Load the data from the NPY files
@@ -89,6 +92,7 @@ def load_data():
 def compute_traces_hw(traces_train, output_sbox_hw):
     """
     Calculates the HW for all the traces
+
     :param traces_train: Traces used to train
     :param output_sbox_hw: Output of the Sbox
     :return: The HW value for all the traces as a list of np arrays
@@ -125,7 +129,7 @@ def compute_key(traces_test, features, hamming, sbox, pt_test, mean_matrix, cov_
     :param ge: Guessing Entropy set to 0s
     :param best_guess: Best guess which is going to be calculated
     :param byte: The byte of the key to attack
-    :return:
+    :return: the GE and the key guesses of the 5 most probable occurences
     """
     # Initialize P_k - It will be used to store the key guessed before returning them
     P_k = np.zeros(HW_SIZE)
@@ -160,10 +164,6 @@ def compute_key(traces_test, features, hamming, sbox, pt_test, mean_matrix, cov_
         ge_j = list(tarefs).index(known_key[0][byte])
         guess_j = np.argsort(P_k)[-1]
 
-        print(j)
-        print(guess_j)
-        print(ge_j)
-
         # Check if the new key guess needs to be stored
         if guess_j in list_guesses:
             # The last key stores is not the same as guess_j, then remove it from the list to store it at the end
@@ -194,6 +194,7 @@ def compute_key(traces_test, features, hamming, sbox, pt_test, mean_matrix, cov_
 def calc_mean(traces_train, traces_hw):
     """
     Calculate the mean value from the HW
+
     :param traces_train: Traces to profile
     :param traces_hw: HW values from the traces
     :return: The means from the HW
@@ -211,6 +212,7 @@ def calc_mean(traces_train, traces_hw):
 def calc_sum_diff(traces_train, means):
     """
     Calculates the Sum of the Difference
+
     :param traces_train: Traces to profile
     :param means: The means from the HW
     :return: The Sum of the Difference
@@ -218,7 +220,7 @@ def calc_sum_diff(traces_train, means):
     # Initialize SumDiff to zeros
     SumDiff = np.zeros(len(traces_train[0]))
 
-    # Calculate the sum of the differences TODO Check for what is this??
+    # Calculate the sum of the differences
     for i in range(HW_MODEL_SIZE):
         for j in range(i):
             # Get the absolute value of the difference
@@ -230,6 +232,7 @@ def calc_sum_diff(traces_train, means):
 def calc_features(sum_diff):
     """
     Calculates the features and updates SumDiff
+
     :param sum_diff: The Sum of the Difference
     :return: The features calculated and the SumDiff
     """
@@ -246,6 +249,7 @@ def calc_features(sum_diff):
 
         # Get the max value from 0 to the value belonging to the next feature minus spacing
         featureMin = max(0, nextFeature - FEATURE_SPACING)
+
         # Get the minimum value from the value belonging to the next feature minus spacing up to the length of SumDiff
         # Which is the amount of Traces to Train
         featureMax = min(nextFeature + FEATURE_SPACING, len(sum_diff))
@@ -261,6 +265,7 @@ def calc_features(sum_diff):
 def calc_mean_cov(cov_matrix):
     """
     Updates the value of the covariance matrix by calculating its mean
+
     :param cov_matrix: Covariance matrix
     :return: Updated Covariance Matrix
     """
@@ -275,6 +280,7 @@ def calc_mean_cov(cov_matrix):
 def calc_mean_cov_mat(means, features, traces_hw):
     """
     Calculate the matrices for the mean and for the covariance
+
     :param means: The means from the HW
     :param features: Features to be used
     :param traces_hw: HW values from the traces
@@ -294,7 +300,6 @@ def calc_mean_cov_mat(means, features, traces_hw):
             mean_matrix[HW][i] = means[HW][features[i]]
 
             for j in range(NUM_FEATURES):
-                # TODO Check what is happening here
                 x = traces_hw[HW][:, features[i]]
                 y = traces_hw[HW][:, features[j]]
 
@@ -309,6 +314,7 @@ def calc_mean_cov_mat(means, features, traces_hw):
 def calc_ge_guess(traces_test, features, hamming, pt_test, mean_matrix, cov_matrix, known_key):
     """
     Calculates the GE and the Best Guess for each byte of the key analyzed
+
     :param traces_test: Traces to test
     :param features: Features to be used
     :param hamming: Hamming Weight Array set to 1s
@@ -331,21 +337,30 @@ def calc_ge_guess(traces_test, features, hamming, pt_test, mean_matrix, cov_matr
 
 
 def comp_result(known_key, best_guess, byte):
+    """
+    Checks if the actual key is in the array of best guesses
+
+    :param known_key: The actual key used
+    :param best_guess: Best guess which is going to be calculated
+    :param byte: The byte of the key to attack
+    :return: 1 if the key is in the guesses. Otherwise 0 is returned
+    """
     return 1 if known_key[0][byte] in best_guess else 0
 
 
 def pool_calc(profile_size, attack_size, traces, pt, known_key, hamming, attack_size_i, noise):
     """
-    TODO
-    :param noise:
-    :param attack_size_i:
-    :param known_key:
-    :param hamming:
-    :param profile_size:
-    :param attack_size: 
-    :param traces: 
-    :param pt: 
-    :return: 
+    Performs the pooled template attack
+
+    :param noise: Boolean describing if there is going to be added noise in the traces
+    :param attack_size_i: Amount of attack traces for the current evaluation
+    :param known_key: The actual key used
+    :param hamming: Hamming Weight Array set to 1s
+    :param profile_size: Amount of measurements for profiling
+    :param attack_size: Amount of measurements for attacking
+    :param traces: Traces to attack
+    :param pt: Plain text
+    :return: An array with the rank, ge and the best_guess
     """
     # Obtain the traces to be used by BBS Shuffling
     traces_train, pt_train, traces_test, pt_test = bbs_suf(profile_size, attack_size, traces, pt, attack_size_i, noise)
@@ -360,7 +375,7 @@ def pool_calc(profile_size, attack_size, traces, pt, known_key, hamming, attack_
 
     # Compute the Mean values from the HW
     means = calc_mean(traces_train, traces_hw)
-    
+
     # Compute the Sum of the Difference
     SumDiff = calc_sum_diff(traces_train, means)
 
@@ -390,9 +405,10 @@ def pool_atack(profile_size, attack_size, noise):
     This method mainly set the step and evaluation counter
     And calls to  pool_calc which actually performs the attack
 
-    :param noise:
+    :param noise: Boolean describing if there is going to be added noise in the traces
     :param profile_size: Amount of measurements for profiling
     :param attack_size: Amount of measurements for attacking
+    :return: a list of arrays with [rank, ge and the best_guess] and the attack_size use for those results
     """
     # Check if all the needed folders are created
     for folder in FOLDERS:
@@ -425,11 +441,10 @@ def pool_atack(profile_size, attack_size, noise):
         current_eval = 0
         # Run the pooled calculations EVAL_NUMB times
         while current_eval <= EVAL_NUMB:
-            # Initialize the Hamming Weight Array TODO Double check that removing this is correct
-            # hamming = [bin(n).count("1") for n in range(HW_SIZE)]
-
             # Perform the Pooled TA for each evaluation
-            temp_results.append(pool_calc(profile_size, attack_size, traces, pt, known_key, hamming, attack_size_i, noise))
+            temp_results.append(pool_calc(profile_size, attack_size, traces, pt,
+                                          known_key, hamming, attack_size_i, noise))
+
             current_eval += 1
 
         # Add the results for the current execution step
