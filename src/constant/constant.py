@@ -51,6 +51,7 @@ FEATURE_SPACING = 1
 KEY_BYTES = 16
 
 ATTACK_B = 6  # Attacked byte
+NOISE = [-20, 20]
 
 PRIME_LEN = 1000
 KEY_RANK = 5

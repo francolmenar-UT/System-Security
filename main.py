@@ -19,12 +19,25 @@ def run():
     rank_list = []
 
     # Firs Scenario
-    rank_list.append(pool_atack(PROFILE_0, ATTACK_0))
+    rank_list.append(pool_atack(PROFILE_0, ATTACK_0, False))
 
     print(rank_list[0])
 
     # Second Scenario
     # pool_atack(PROFILE_1, ATTACK_1)
+    return 0
+
+
+@main.command(help='')
+def run_n():
+    # List storing all the resulting key rank values from all the evaluations
+    rank_list = []
+
+    # Firs Scenario
+    rank_list.append(pool_atack(PROFILE_0, ATTACK_0, True))
+
+    print(rank_list[0])
+
     return 0
 
 

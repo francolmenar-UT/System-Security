@@ -160,6 +160,10 @@ def compute_key(traces_test, features, hamming, sbox, pt_test, mean_matrix, cov_
         ge_j = list(tarefs).index(known_key[0][byte])
         guess_j = np.argsort(P_k)[-1]
 
+        print(j)
+        print(guess_j)
+        print(ge_j)
+
         # Check if the new key guess needs to be stored
         if guess_j in list_guesses:
             # The last key stores is not the same as guess_j, then remove it from the list to store it at the end
@@ -330,9 +334,10 @@ def comp_result(known_key, best_guess, byte):
     return 1 if known_key[0][byte] in best_guess else 0
 
 
-def pool_calc(profile_size, attack_size, traces, pt, known_key, hamming, attack_size_i):
+def pool_calc(profile_size, attack_size, traces, pt, known_key, hamming, attack_size_i, noise):
     """
     TODO
+    :param noise:
     :param attack_size_i:
     :param known_key:
     :param hamming:
@@ -343,7 +348,7 @@ def pool_calc(profile_size, attack_size, traces, pt, known_key, hamming, attack_
     :return: 
     """
     # Obtain the traces to be used by BBS Shuffling
-    traces_train, pt_train, traces_test, pt_test = bbs_suf(profile_size, attack_size, traces, pt, attack_size_i)
+    traces_train, pt_train, traces_test, pt_test = bbs_suf(profile_size, attack_size, traces, pt, attack_size_i, noise)
 
     # Calculate the output of the S box
     output_sbox = [SBOX[pt_train[i][0] ^ known_key[i][0]] for i in range(len(pt_train))]
@@ -379,12 +384,13 @@ def pool_calc(profile_size, attack_size, traces, pt, known_key, hamming, attack_
     return [rank, ge, best_guess]
 
 
-def pool_atack(profile_size, attack_size):
+def pool_atack(profile_size, attack_size, noise):
     """
     Performs the Pooled Template Attack
     This method mainly set the step and evaluation counter
     And calls to  pool_calc which actually performs the attack
 
+    :param noise:
     :param profile_size: Amount of measurements for profiling
     :param attack_size: Amount of measurements for attacking
     """
@@ -423,7 +429,7 @@ def pool_atack(profile_size, attack_size):
             # hamming = [bin(n).count("1") for n in range(HW_SIZE)]
 
             # Perform the Pooled TA for each evaluation
-            temp_results.append(pool_calc(profile_size, attack_size, traces, pt, known_key, hamming, attack_size_i))
+            temp_results.append(pool_calc(profile_size, attack_size, traces, pt, known_key, hamming, attack_size_i, noise))
             current_eval += 1
 
         # Add the results for the current execution step

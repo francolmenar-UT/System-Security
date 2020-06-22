@@ -7,7 +7,7 @@ import random
 from decimal import *
 import numpy as np
 
-from src.constant.constant import PRIME_LEN
+from src.constant.constant import PRIME_LEN, NOISE
 
 
 def is_prime(n, t=128):
@@ -162,9 +162,20 @@ class BlumBlumShub(object):
         return result
 
 
-def bbs_suf(profile_size, attack_size, traces, pt, attack_num):
+def add_uniform_noise(trace, noise_level):
+    new_trace = np.ones_like(trace)
+
+    for i in range(0, len(trace)):
+        level = random.randint(noise_level[0], noise_level[1])
+        new_trace[i] = trace[i] + level
+
+    return new_trace
+
+
+def bbs_suf(profile_size, attack_size, traces, pt, attack_num, noise):
     """
     TODO
+    :param noise:
     :param profile_size:
     :param attack_size:
     :param traces:
@@ -221,9 +232,16 @@ def bbs_suf(profile_size, attack_size, traces, pt, attack_num):
     if reverse:
         rdn_list = list(set(range(0, attack_size)) - set(rdn_list))
 
-    # Add the attack traces 
-    for num in rdn_list:
-        traces_test.append(traces[profile_size + num])
-        pt_test.append(pt[profile_size + num])
+    # Add the attack traces with noise
+    if noise:
+        for num in rdn_list:
+            traces_test.append(traces[profile_size + num] + random.randint(NOISE[0], NOISE[1]))
+            pt_test.append(pt[profile_size + num])
+
+    # Add the attack traces without noise
+    else:
+        for num in rdn_list:
+            traces_test.append(traces[profile_size + num])
+            pt_test.append(pt[profile_size + num])
 
     return traces_train, pt_train, traces_test, pt_test
