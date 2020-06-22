@@ -1,8 +1,3 @@
-"""
-Adapted from http://javarng.googlecode.com/svn/trunk/com/modp/random/BlumBlumShub.java
-From https://github.com/VSpike/BBS
-"""
-
 import random
 from decimal import *
 

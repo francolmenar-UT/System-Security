@@ -2,10 +2,6 @@
 .DS_Store
 
 doc/
-*.h5
-*.npy
-
-
 
 
 # Byte-compiled / optimized / DLL files

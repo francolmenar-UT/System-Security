@@ -34,39 +34,14 @@ def h5_to_npy(path_f):
         print("Error: can't open HDF5 file '%s' for reading (it might be malformed) ..." % path_f)
         sys.exit(-1)
 
-    """
-    print(in_file.keys())
-
-    aux = in_file['Profiling_traces']
-
-    print(aux.keys())
-
-    aux1 = aux['labels']
-    print(aux1[0])
-
-    aux2 = aux['metadata']
-    print(aux2[0])
-
-    aux3 = aux['traces']
-    print(aux3[0])
-    """
-
     # Get the Data from the H5 file
-    raw_traces = in_file['traces'][()]
+    prof_traces_obj = in_file['Profiling_traces']
 
-    # print(raw_traces[0])
+    prof_metadata = prof_traces_obj['metadata']
 
-    raw_data = in_file['metadata']
-
-    # print(raw_data[0])
-
-    raw_plaintexts = raw_data['plaintext'][()]
-
-    # print(raw_plaintexts[0])
-
-    raw_keys = raw_data['key'][()]
-
-    # print(raw_keys[0])
+    raw_traces = prof_traces_obj['traces']
+    raw_plaintexts = prof_metadata[:]['plaintext']
+    raw_keys = prof_metadata[:]['key']
 
     # Save H5 data as a Numpy Array into the defined folders
     np.save(DATA_NPY + TRACES + NPY, raw_traces)
@@ -129,7 +104,7 @@ def compute_key(traces_test, features, hamming, sbox, pt_test, mean_matrix, cov_
     :param ge: Guessing Entropy set to 0s
     :param best_guess: Best guess which is going to be calculated
     :param byte: The byte of the key to attack
-    :return: the GE and the key guesses of the 5 most probable occurences
+    :return: the GE and the key guesses of the 5 most probable occurrences
     """
     # Initialize P_k - It will be used to store the key guessed before returning them
     P_k = np.zeros(HW_SIZE)
@@ -391,12 +366,12 @@ def pool_calc(profile_size, attack_size, traces, pt, known_key, hamming, attack_
     # Calculate the GE and the Best Guess for each key byte analyzed
     ge, best_guess = calc_ge_guess(traces_test, features, hamming, pt_test, mean_matrix, cov_matrix, known_key)
 
-    print_result(best_guess, known_key, ge, ATTACK_B) if DEBUG else None
-
     # Compares the 5 most likely guesses with the correct key
-    rank = comp_result(known_key, best_guess, ATTACK_B)
+    comp_res = comp_result(known_key, best_guess, ATTACK_B)
 
-    return [rank, ge, best_guess]
+    print_result(best_guess, known_key, ge, comp_res, ATTACK_B) if DEBUG else None
+
+    return [comp_res, ge, best_guess]
 
 
 def pool_atack(profile_size, attack_size, noise):

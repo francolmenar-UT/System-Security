@@ -1,10 +1,7 @@
 ########################### H5 to NPY File Variables ###########################
 CALC_NPY = False  # Convert the H5 file to NPY if True
-H5_TRACES_P = "data/ASCAD/ATMega8515_raw_traces.h5"
-# H5_TRACES_P = "data/ASCAD/ASCAD_desync50.h5"
-# H5_TRACES_P = "data/ASCAD/ASCAD_desync100.h5"
-# H5_TRACES_P = "data/ASCAD/ASCAD.h5"
-
+# H5_TRACES_P = "data/ASCAD/ATMega8515_raw_traces.h5"
+H5_TRACES_P = "data/ASCAD/ASCAD.h5"
 
 ###########################  NPY File Variables ###########################
 TRACES = "traces"
@@ -17,13 +14,14 @@ NPY = ".npy"
 DATA_F = "data/"
 DATA_NPY = "data/npy/"
 
+
 ###########################  Scenario Variables ###########################
 # First Scenario
 PROFILE_0 = 500
 ATTACK_0 = 100
 EXE_STEP = 50
-#PROFILE_0 = 18000
-#ATTACK_0 = 6000
+# PROFILE_0 = 18000
+# ATTACK_0 = 6000
 
 # Second Scenario
 PROFILE_1 = 27000
@@ -50,7 +48,7 @@ FEATURE_SPACING = 1
 
 KEY_BYTES = 16
 
-ATTACK_B = 6  # Attacked byte
+ATTACK_B = 7 - 1  # Attacked byte
 NOISE = [-20, 20]
 
 PRIME_LEN = 1000

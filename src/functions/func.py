@@ -28,23 +28,10 @@ def save_time(file, data_list, length):
     output_f.close()
 
 
-def print_result(best_guess, known_key, ge, byte):
+def print_result(best_guess, known_key, ge, comp_res, byte):
     # Print result
-    print("Real  Key:{} ,\t Best Key Guess: {}, \t GE: {}".format(known_key[0][byte], best_guess, ge))
-
-
-def read_np(files):
-    result = []
-    for file in files:
-        result.append(np.load(r'' + file))
-    return result
-
-
-def to_zero(index, length):
-    result = []
-    for i in range(0, index):
-        result.append(np.zeros(length))
-    return result
+    print("Real  Key:{} , \t Best Key Guess: {}, \t Comp result: {} \t GE: {}".format(
+        known_key[0][byte], best_guess, comp_res, ge))
 
 
 def save_result(folder, best_guess, ge, sub_key_amount, num_traces):
