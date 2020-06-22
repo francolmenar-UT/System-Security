@@ -14,29 +14,32 @@ def main():
 
 
 @main.command(help='')
-def run():
-    # List storing all the resulting key rank values from all the evaluations
-    rank_list = []
+@click.pass_context
+def both(ctx):
+    # Run without noise
+    ctx.invoke(run, noise=False)
 
-    # Firs Scenario
-    rank_list.append(pool_atack(PROFILE_0, ATTACK_0, False))
-
-    print(rank_list[0])
-
-    # Second Scenario
-    # pool_atack(PROFILE_1, ATTACK_1)
-    return 0
+    # Run with noise
+    ctx.invoke(run, noise=True)
 
 
 @main.command(help='')
-def run_n():
+@click.option('--noise', '-n', is_flag=True, help='Run the execution with noise')
+def run(noise=False):
     # List storing all the resulting key rank values from all the evaluations
     rank_list = []
 
     # Firs Scenario
-    rank_list.append(pool_atack(PROFILE_0, ATTACK_0, True))
+    rank_list.append(pool_atack(PROFILE_0, ATTACK_0, noise))
 
     print(rank_list[0])
+    """
+    
+    rank_list = []
+    # Second Scenario
+    pool_atack(PROFILE_1, ATTACK_1, noise)
+    
+    """
 
     return 0
 
