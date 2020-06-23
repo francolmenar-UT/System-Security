@@ -11,17 +11,6 @@ import matplotlib.pyplot as plt
 from src.constant.constant import *
 
 
-def cov(x, y):
-    """
-    Calculates the covariance from two numbers
-
-    :param x:
-    :param y:
-    :return:
-    """
-    return np.cov(x, y)[0][1]
-
-
 def h5_to_npy(path_f):
     """
     Save the H5 file into the different NPY files to be used
@@ -62,6 +51,17 @@ def load_data():
     known_key = np.load(DATA_NPY + KEY + NPY)
 
     return traces, pt, known_key
+
+
+def cov(x, y):
+    """
+    Calculates the covariance from two numbers
+
+    :param x:
+    :param y:
+    :return:
+    """
+    return np.cov(x, y)[0][1]
 
 
 def compute_traces_hw(traces_train, output_sbox_hw):
@@ -113,15 +113,17 @@ def compute_key(traces_test, features, hamming, sbox, pt_test, mean_matrix, cov_
     list_guesses = []
     list_ge = []
 
+    hamming_1 = np.array(hamming)
+
     # For every test trace
     for j in range(len(traces_test)):
         # Select the POI
-        a = [traces_test[j][features[i]] for i in range(len(features))]
+        a = np.array([traces_test[j][features[i]] for i in range(len(features))])
 
         # For every possible key value
         for k_guess in range(0, HW_SIZE):
             # Get the HW
-            HW = hamming[sbox[pt_test[j][byte] ^ k_guess]]
+            HW = hamming_1[sbox[pt_test[j][byte] ^ k_guess]]
 
             # Compute pdf
             rv = multivariate_normal(mean_matrix[HW], cov_matrix)
@@ -286,31 +288,6 @@ def calc_mean_cov_mat(means, features, traces_hw):
     return mean_matrix, cov_matrix
 
 
-def calc_ge_guess(traces_test, features, hamming, pt_test, mean_matrix, cov_matrix, known_key):
-    """
-    Calculates the GE and the Best Guess for each byte of the key analyzed
-
-    :param traces_test: Traces to test
-    :param features: Features to be used
-    :param hamming: Hamming Weight Array set to 1s
-    :param pt_test: Plain text to be tested
-    :param mean_matrix: Matrix with the mean values
-    :param cov_matrix: Covariance matrix
-    :param known_key: The actual key used
-    :return: the Guessing Entropy and the 5 best key guesses as two lists
-    """
-    # Initialize the guessing entropy
-    ge = np.zeros(KEY_BYTES)
-    # Initialize the best guess
-    best_guess = np.zeros(KEY_BYTES)
-
-    # Calculate the guessed key for the attacked byte
-    ge, best_guess = compute_key(traces_test, features, hamming, SBOX, pt_test,
-                                 mean_matrix, cov_matrix, known_key, ge, best_guess, ATTACK_B)
-
-    return ge, best_guess
-
-
 def comp_result(known_key, best_guess, byte):
     """
     Checks if the actual key is in the array of best guesses
@@ -337,6 +314,11 @@ def pool_calc(profile_size, attack_size, traces, pt, known_key, hamming, attack_
     :param pt: Plain text
     :return: An array with the rank, ge and the best_guess
     """
+    # Initialize the guessing entropy
+    ge = np.zeros(KEY_BYTES)
+    # Initialize the best guess
+    best_guess = np.zeros(KEY_BYTES)
+
     # Obtain the traces to be used by BBS Shuffling
     traces_train, pt_train, traces_test, pt_test = bbs_suf(profile_size, attack_size, traces, pt, attack_size_i, noise)
 
@@ -363,8 +345,9 @@ def pool_calc(profile_size, attack_size, traces, pt, known_key, hamming, attack_
     # Calculate the mean of the covariance values
     cov_matrix = calc_mean_cov(cov_matrix)
 
-    # Calculate the GE and the Best Guess for each key byte analyzed
-    ge, best_guess = calc_ge_guess(traces_test, features, hamming, pt_test, mean_matrix, cov_matrix, known_key)
+    # Calculate the guessed key for the attacked byte
+    ge, best_guess = compute_key(traces_test, features, hamming, SBOX, pt_test,
+                                 mean_matrix, cov_matrix, known_key, ge, best_guess, ATTACK_B)
 
     # Compares the 5 most likely guesses with the correct key
     comp_res = comp_result(known_key, best_guess, ATTACK_B)
@@ -415,10 +398,23 @@ def pool_atack(profile_size, attack_size, noise):
         # Reset the evaluation counter
         current_eval = 0
         # Run the pooled calculations EVAL_NUMB times
-        while current_eval <= EVAL_NUMB:
+        while current_eval < EVAL_NUMB:
+            print()
             # Perform the Pooled TA for each evaluation
-            temp_results.append(pool_calc(profile_size, attack_size, traces, pt,
-                                          known_key, hamming, attack_size_i, noise))
+            # import time
+            # start = time.process_time()
+            result_i = pool_calc(profile_size, attack_size, traces, pt,
+                                 known_key, hamming, attack_size_i, noise)
+
+            temp_results.append(result_i)
+
+            print(result_i)
+
+            save_result_csv(result_i, profile_size, attack_size_i, noise)
+
+
+
+            # print(time.process_time() - start)
 
             current_eval += 1
 

@@ -1,47 +1,48 @@
 ########################### H5 to NPY File Variables ###########################
 CALC_NPY = False  # Convert the H5 file to NPY if True
-# H5_TRACES_P = "data/ASCAD/ATMega8515_raw_traces.h5"
 H5_TRACES_P = "data/ASCAD/ASCAD.h5"
 
-###########################  NPY File Variables ###########################
+###########################  Data Variables ###########################
+DATA_F = "data/"
+DATA_NPY = "data/npy/"
+DATA_CSV = "data/csv/"
+
 TRACES = "traces"
 PLAIN = "plain"
 KEY = "key"
 
 NPY = ".npy"
-
-###########################  Data Variables ###########################
-DATA_F = "data/"
-DATA_NPY = "data/npy/"
-
+CSV = ".csv"
 
 ###########################  Scenario Variables ###########################
 # First Scenario
-PROFILE_0 = 500
-ATTACK_0 = 100
-EXE_STEP = 50
+PROFILE_0 = 18000
+ATTACK_0 = 2000
+
 # PROFILE_0 = 18000
 # ATTACK_0 = 6000
 
 # Second Scenario
 PROFILE_1 = 27000
-ATTACK_1 = 12000
+ATTACK_1 = 2000
+
+# PROFILE_1 = 27000
+# ATTACK_1 = 12000
 
 ###########################  All the folders used ###########################
 
-FOLDERS = [DATA_F, DATA_NPY]
+FOLDERS = [DATA_F, DATA_NPY, DATA_CSV]
 
 ###########################  Constants for the Execution of the PTA ###########################
 DEBUG = True
-SUB_KEY_AMOUNT = 2  # Amount the sub-keys used
+
 HW_SIZE = 256  # Size of the HW array containing the results
 HW_MODEL_SIZE = 9  # The only possible values for HW are from 0-8
-# EVAL_NUMB = 100 # Number of evaluations
-EVAL_NUMB = 2  # Number of evaluations TEST
-# EXE_STEP = 500
 
-PROF_TRACES_NM = 9000
-ATTACK_TRACES_NM = 500
+EVAL_NUMB = 1  # Number of evaluations TEST
+# EVAL_NUMB = 100 # Number of evaluations
+# EXE_STEP = 6000
+EXE_STEP = 2000
 
 NUM_FEATURES = 50
 FEATURE_SPACING = 1

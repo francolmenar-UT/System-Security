@@ -1,9 +1,8 @@
 import click
 from pyfiglet import Figlet
 
-import timeit
-# from src.graph.createGraph import create_graph
 from src.constant.constant import *
+from src.graph.createGraph import create_graph
 
 from src.pool import pool_atack
 
@@ -26,20 +25,25 @@ def both(ctx):
 @main.command(help='')
 @click.option('--noise', '-n', is_flag=True, help='Run the execution with noise')
 def run(noise=False):
-    # List storing all the resulting key rank values from all the evaluations
-    rank_list = []
-
     # Firs Scenario
-    rank_list.append(pool_atack(PROFILE_0, ATTACK_0, noise))
 
-    print(rank_list[0])
-    """
-    
-    rank_list = []
+    rank_list_a = [pool_atack(PROFILE_0, ATTACK_0, noise)]
+
+    # Result, GE, Best Guesses
+
+    # print(rank_list_a[0])
+    # print()
+    # print(rank_list_a)
+    # print()
+
     # Second Scenario
-    pool_atack(PROFILE_1, ATTACK_1, noise)
-    
-    """
+
+    rank_list_b = [pool_atack(PROFILE_1, ATTACK_1, noise)]
+
+    # print(rank_list_b[0])
+    # print()
+    # print(rank_list_b)
+    # print()
 
     return 0
 
@@ -49,7 +53,7 @@ def graph():
     """
     Generates the Graphs
     """
-    # create_graph()
+    create_graph()
     return 0
 
 

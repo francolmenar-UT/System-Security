@@ -3,8 +3,8 @@ import numpy as np
 import pandas as pd
 import os
 
-from src.constants.graph_const import *
-from src.constants.const import *
+from src.constant.graph_const import *
+from src.constant.constant import *
 
 
 def obtain_mean(data_list):
@@ -226,6 +226,62 @@ def create_graph():
     It creates the graphs for the CSV files created.
     Uses the data from graph_const and const
     """
+    from os import listdir
+    from os.path import isfile, join
+    file_list = [f for f in listdir(DATA_CSV) if isfile(join(DATA_CSV, f))]
+
+    scenario_1, scenario_1_noise, scenario_2, scenario_2_noise = [], [], [], []
+
+    for f in file_list:
+        profile_size_i = -1
+        attack_size_i = -1
+        noise_i = False
+
+        f_split = f.split("-")
+
+        for idx, col in enumerate(f_split):
+            pair_val = col.split(":")
+            if idx == 0:
+                profile_size_i = int(pair_val[1])
+
+            elif idx == 1:
+                attack_size_i = int(pair_val[1])
+
+            elif idx == 2:
+                noise_i = bool(pair_val[1])
+
+        data_tmp = pd.read_csv(DATA_CSV + f, sep=",", header=None, names=["Comp", "GE", "Key"])
+
+        result_i = data_tmp["Comp"]
+
+        print("Comp")
+        print(result_i)
+
+        ge_i = data_tmp["GE"]
+
+        print("GE")
+        print(ge_i)
+
+        keys_i = data_tmp["Key"]
+
+        print(keys_i)
+
+
+        if profile_size_i == 18000:
+            if noise_i:
+                scenario_1_noise.append([result_i, ge_i, keys_i, attack_size_i])
+            else:
+                scenario_1.append([result_i, ge_i, keys_i, attack_size_i])
+
+        elif profile_size_i == 27000:
+            if noise_i:
+                scenario_2_noise.append([result_i, ge_i, keys_i, attack_size_i])
+            else:
+                scenario_2.append([result_i, ge_i, keys_i, attack_size_i])
+
+
+    print(scenario_1)
+
     # Modes to use, change by the user - Median mode should be used alone
     modes = [LN_MEDIAN]
     colour = COLOUR  # This is for all the graphs but for the median
@@ -304,7 +360,7 @@ def createPlots(c1, c2, data, label, colour,
             plt.plot((0, x_i), (y[idx], y[idx]), alpha=0.7, color=graph_col[idx], linestyle="dashed")
 
             # Point
-            plt.plot(x_i, y[idx], 'o', markersize=3,  alpha=0.7, color=graph_col[idx])
+            plt.plot(x_i, y[idx], 'o', markersize=3, alpha=0.7, color=graph_col[idx])
 
         # Set colour variable to set the grid
         colour = grid_col

@@ -1,8 +1,7 @@
 import os
-
+import datetime
 import numpy as np
-
-from src.constant.constant import SUB_KEY_STR, JOIN, NUM_TRACES_STR
+from src.constant.constant import SUB_KEY_STR, JOIN, NUM_TRACES_STR, DATA_CSV, CSV
 
 
 def create_folder(folder):
@@ -16,13 +15,32 @@ def create_folder(folder):
         os.makedirs(folder)  # Create folder
 
 
-def save_time(file, data_list, length):
+def save_result_csv(result_i, profile_size, attack_size_i, noise):
+    datetime.datetime.now().time()
+    datetime.time(15, 8, 24, 78915)
+
+    aux_time = datetime.datetime.now().time()
+    file = DATA_CSV + "profile_size:" + str(profile_size) + "-attack_size:" + str(
+        attack_size_i) + "-noise:" + str(noise) + "-time:" + str(aux_time) + CSV
+
+    print(file)
+
     output_f = open(file, "w+")  # Open the output file
     data_str = ""
 
     # Save time against length
-    for data in data_list:
-        data_str += str(length) + ',' + str(data) + '\n'  # Append the data in a csv form
+    for array in result_i:
+        if isinstance(array, int):
+            data_str += str(array) + ','  # Append the data in a csv form
+
+        else:
+            for idx, val in enumerate(array):
+                if idx == len(array) - 1:
+                    data_str += str(val)
+                else:
+                    data_str += str(val) + "-"
+
+            data_str += ','  # Append the data in a csv form
 
     output_f.write(data_str)  # Write the processed line to the output text file
     output_f.close()
