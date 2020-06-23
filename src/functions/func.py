@@ -29,9 +29,9 @@ def save_result_csv(result_i, profile_size, attack_size_i, noise):
     data_str = ""
 
     # Save time against length
-    for array in result_i:
+    for idx_1, array in enumerate(result_i):
         if isinstance(array, int):
-            data_str += str(array) + ','  # Append the data in a csv form
+            data_str += str(array)  # Append the data in a csv form
 
         else:
             for idx, val in enumerate(array):
@@ -40,6 +40,7 @@ def save_result_csv(result_i, profile_size, attack_size_i, noise):
                 else:
                     data_str += str(val) + "-"
 
+        if idx_1 != len(result_i) - 1:
             data_str += ','  # Append the data in a csv form
 
     output_f.write(data_str)  # Write the processed line to the output text file

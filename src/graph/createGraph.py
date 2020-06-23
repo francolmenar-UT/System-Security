@@ -252,20 +252,22 @@ def create_graph():
 
         data_tmp = pd.read_csv(DATA_CSV + f, sep=",", header=None, names=["Comp", "GE", "Key"])
 
+        print(data_tmp)
+
         result_i = data_tmp["Comp"]
 
-        print("Comp")
-        print(result_i)
+        # print("Comp")
+        # print(result_i)
 
         ge_i = data_tmp["GE"]
 
-        print("GE")
-        print(ge_i)
+        # print("GE")
+        # print(ge_i)
 
         keys_i = data_tmp["Key"]
 
-        print(keys_i)
-
+        # print("Key")
+        # print(keys_i)
 
         if profile_size_i == 18000:
             if noise_i:
@@ -280,6 +282,7 @@ def create_graph():
                 scenario_2.append([result_i, ge_i, keys_i, attack_size_i])
 
 
+    return
     print(scenario_1)
 
     # Modes to use, change by the user - Median mode should be used alone
