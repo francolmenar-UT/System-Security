@@ -19,9 +19,11 @@ def save_result_csv(result_i, profile_size, attack_size_i, noise):
     datetime.datetime.now().time()
     datetime.time(15, 8, 24, 78915)
 
-    aux_time = datetime.datetime.now().time()
-    file = DATA_CSV + "profile_size:" + str(profile_size) + "-attack_size:" + str(
-        attack_size_i) + "-noise:" + str(noise) + "-time:" + str(aux_time) + CSV
+    aux_time = str(datetime.datetime.now().time())
+    aux_time = aux_time.replace(":", "-", 999)
+
+    file = DATA_CSV + "profile_size+" + str(profile_size) + "-attack_size+" + str(
+        attack_size_i) + "-noise+" + str(noise) + "-time+" + str(aux_time) + CSV
 
     print(file)
 

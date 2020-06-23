@@ -6,6 +6,12 @@ H5_TRACES_P = "data/ASCAD/ASCAD.h5"
 DATA_F = "data/"
 DATA_NPY = "data/npy/"
 DATA_CSV = "data/csv/"
+DATA_CSV_PROC = "data/proc_csv/"
+
+SC1_NOISE = "sc1_noise"
+SC2_NOISE = "sc2_noise"
+SC1 = "sc1"
+SC2 = "sc2"
 
 TRACES = "traces"
 PLAIN = "plain"
@@ -15,23 +21,22 @@ NPY = ".npy"
 CSV = ".csv"
 
 ###########################  Scenario Variables ###########################
+
 # First Scenario
 PROFILE_0 = 18000
-ATTACK_0 = 2000
+ATTACK_0 = 6000
 
 # PROFILE_0 = 18000
 # ATTACK_0 = 6000
 
 # Second Scenario
-PROFILE_1 = 27000
-ATTACK_1 = 2000
 
-# PROFILE_1 = 27000
-# ATTACK_1 = 12000
+PROFILE_1 = 27000
+ATTACK_1 = 12000
 
 ###########################  All the folders used ###########################
 
-FOLDERS = [DATA_F, DATA_NPY, DATA_CSV]
+FOLDERS = [DATA_F, DATA_NPY, DATA_CSV, DATA_CSV_PROC]
 
 ###########################  Constants for the Execution of the PTA ###########################
 DEBUG = True
@@ -39,7 +44,7 @@ DEBUG = True
 HW_SIZE = 256  # Size of the HW array containing the results
 HW_MODEL_SIZE = 9  # The only possible values for HW are from 0-8
 
-EVAL_NUMB = 1  # Number of evaluations TEST
+EVAL_NUMB = 2  # Number of evaluations TEST
 # EVAL_NUMB = 100 # Number of evaluations
 # EXE_STEP = 6000
 EXE_STEP = 2000

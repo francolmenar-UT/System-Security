@@ -27,7 +27,7 @@ def both(ctx):
 def run(noise=False):
     # Firs Scenario
 
-    rank_list_a = [pool_atack(PROFILE_0, ATTACK_0, noise)]
+    # rank_list_a = [pool_atack(PROFILE_0, ATTACK_0, noise)]
 
     # Result, GE, Best Guesses
 

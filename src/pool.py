@@ -117,8 +117,10 @@ def compute_key(traces_test, features, hamming, sbox, pt_test, mean_matrix, cov_
 
     # For every test trace
     for j in range(len(traces_test)):
+
         # Select the POI
         a = np.array([traces_test[j][features[i]] for i in range(len(features))])
+
 
         # For every possible key value
         for k_guess in range(0, HW_SIZE):
@@ -133,6 +135,7 @@ def compute_key(traces_test, features, hamming, sbox, pt_test, mean_matrix, cov_
             # Avoid -inf case
             if p_kj != 0:
                 P_k[k_guess] += np.log(p_kj)
+
 
         # Compute current GE and best_guess
         tarefs = np.argsort(P_k)[::-1]
@@ -397,12 +400,10 @@ def pool_atack(profile_size, attack_size, noise):
 
         # Reset the evaluation counter
         current_eval = 0
+
         # Run the pooled calculations EVAL_NUMB times
         while current_eval < EVAL_NUMB:
-            print()
             # Perform the Pooled TA for each evaluation
-            # import time
-            # start = time.process_time()
             result_i = pool_calc(profile_size, attack_size, traces, pt,
                                  known_key, hamming, attack_size_i, noise)
 
@@ -411,10 +412,6 @@ def pool_atack(profile_size, attack_size, noise):
             print(result_i)
 
             save_result_csv(result_i, profile_size, attack_size_i, noise)
-
-
-
-            # print(time.process_time() - start)
 
             current_eval += 1
 

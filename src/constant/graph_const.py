@@ -3,20 +3,20 @@
 ROUND_VAL = 2
 
 # Names for the columns of the np array
-COL_NM = ["Bit Length",
-          "Execution time"]
+COL_NM = ["Attack Size",
+          "Partial GE"]
 
 ########################### Constants for Graph Creation  ###########################
 # Range of values for the axis
 AXIS = [
-    [0, 120, 10],
-    [0, 33, 3]
+    [0, 5000, 500],
+    [0, 275, 25]
 ]
 
 # Names for the axis
 AXIS_NM = [
-    "Bit Length (bits)",
-    "Execution time (s)"
+    "Attack Size",
+          "Partial GE"
 ]
 
 # Colours for the different graphs
@@ -36,10 +36,10 @@ IMG_FOLDER_PATH = "img/"
 
 # Name for the images files
 IMG = [
-    "Bit_length_10",
-    "Bit_length_20",
-    "Bit_length_50",
-    "Bit_length_100"
+    "scenario_1_noise",
+    "scenario_1",
+    "scenario_2_noise",
+    "scenario_2"
 ]
 
 IMG_SIZE = 600
@@ -49,26 +49,26 @@ IMG_TYPE = ".png"
 
 # Names for the labels from the legend
 LABEL = [
-    "Bit Length 10",
-    "Bit Length 20",
-    "Bit Length 50",
-    "Bit Length 100"
+    "Scenario 1 with noise",
+    "Scenario 1 without noise",
+    "Scenario 2 with noise",
+    "Scenario 2 without noise"
 ]
 
 # Names for the different graphs
 GRAPH_NM = [
-    "Execution time (s) Vs Input Length (bits)",
-    "Bit length 20",
-    "Bit length 50",
-    "Bit length 100"
+    "Scenario 1 with noise",
+    "Scenario 1 without noise",
+    "Scenario 2 with noise",
+    "Scenario 2 without noise"
 ]
 
 # Names for the comparison graphs
 GRAPH_COMP_NM = [
-    "Bit_length_10",
-    "Bit_length_20",
-    "Bit_length_50",
-    "Bit_length_100"
+    "Scenario 1 with noise",
+    "Scenario 1 without noise",
+    "Scenario 2 with noise",
+    "Scenario 2 without noise"
 ]
 
 # Size of the points for the graph

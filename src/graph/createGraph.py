@@ -7,6 +7,25 @@ from src.constant.graph_const import *
 from src.constant.constant import *
 
 
+def save_data(arr, file):
+    output_f = open(file, "w+")  # Open the output file
+
+    data_str = ""
+
+    for idx, arr_i in enumerate(arr):
+        ge_i = arr_i[1].split("-")
+        ge_i = np.asarray(ge_i)
+        ge_i = ge_i.astype(int)
+
+        ge_avg = np.mean(ge_i, axis=0)
+
+        data_str += str(arr_i[3]) + "," + str(int(ge_avg)) + "\n"
+
+    output_f.write(data_str)  # Write the processed line to the output text file
+    output_f.close()
+    return
+
+
 def obtain_mean(data_list):
     mean_data = np.array([COL_NM[0], COL_NM[1]])
     for data_f_i in data_list:
@@ -240,7 +259,7 @@ def create_graph():
         f_split = f.split("-")
 
         for idx, col in enumerate(f_split):
-            pair_val = col.split(":")
+            pair_val = col.split("+")
             if idx == 0:
                 profile_size_i = int(pair_val[1])
 
@@ -248,53 +267,53 @@ def create_graph():
                 attack_size_i = int(pair_val[1])
 
             elif idx == 2:
-                noise_i = bool(pair_val[1])
+                noise_i = True if pair_val[1] == "True" else False
 
         data_tmp = pd.read_csv(DATA_CSV + f, sep=",", header=None, names=["Comp", "GE", "Key"])
 
-        print(data_tmp)
-
-        result_i = data_tmp["Comp"]
-
-        # print("Comp")
-        # print(result_i)
-
-        ge_i = data_tmp["GE"]
-
-        # print("GE")
-        # print(ge_i)
-
-        keys_i = data_tmp["Key"]
-
-        # print("Key")
-        # print(keys_i)
+        result_i = data_tmp.iloc[0]['Comp']
+        ge_i = data_tmp.iloc[0]['GE']
+        keys_i = data_tmp.iloc[0]['Key']
 
         if profile_size_i == 18000:
             if noise_i:
-                scenario_1_noise.append([result_i, ge_i, keys_i, attack_size_i])
+                scenario_1_noise.append([int(result_i), str(ge_i), str(keys_i), int(attack_size_i)])
             else:
                 scenario_1.append([result_i, ge_i, keys_i, attack_size_i])
 
         elif profile_size_i == 27000:
+            print(noise_i)
             if noise_i:
                 scenario_2_noise.append([result_i, ge_i, keys_i, attack_size_i])
             else:
                 scenario_2.append([result_i, ge_i, keys_i, attack_size_i])
 
+    files = []
+    if len(scenario_1_noise) > 0:
+        f = DATA_CSV_PROC + SC1_NOISE + CSV
+        save_data(scenario_1_noise, f)
+        files.append(f)
 
-    return
-    print(scenario_1)
+    if len(scenario_1) > 0:
+        f = DATA_CSV_PROC + SC1 + CSV
+        save_data(scenario_1, f)
+        files.append(f)
+
+    if len(scenario_2_noise) > 0:
+        f = DATA_CSV_PROC + SC2_NOISE + CSV
+        save_data(scenario_2_noise, f)
+        files.append(f)
+
+    if len(scenario_2) > 0:
+        f = DATA_CSV_PROC + SC2 + CSV
+        save_data(scenario_2, f)
+        files.append(f)
+
+    data = readFiles(files, COL_NM, round_val=ROUND_VAL)
 
     # Modes to use, change by the user - Median mode should be used alone
-    modes = [LN_MEDIAN]
+    modes = [LN_DISC]
     colour = COLOUR  # This is for all the graphs but for the median
-
-    # Reads the data from the csv files
-    data = readFiles([DATA_F + TIM_10_F + TIM_10_CSV,
-                      DATA_F + TIM_20_F + TIM_20_CSV,
-                      DATA_F + TIM_50_F + TIM_50_CSV,
-                      DATA_F + TIM_100_F + TIM_100_CSV,
-                      ], COL_NM, round_val=ROUND_VAL)
 
     # Check if there is no folder for the images
     create_folder(IMG_FOLDER_PATH)
@@ -307,7 +326,6 @@ def create_graph():
         data = obtain_mean(data)
         colour = [[COLOUR_FILL_MEDIAN, colour]]
 
-    print(data)
     # Create the graphs for all the different types specified
     for mode in modes:
         # Creates single graphs
