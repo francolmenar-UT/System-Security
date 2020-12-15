@@ -1,2 +1,2 @@
 # System-Security
-Projects of the UT Internet Security course.
+Projects of the UT System Security course.

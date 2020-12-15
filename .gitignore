@@ -1,0 +1,16 @@
+# PRNG
+.idea
+.DS_Store
+venv
+cmake-build-debug/
+__pycache__
+PRNG/sts-2.1.2/
+PRNG/sts-2.1.2/experiments/
+PRNG/data/Part2/Section2-input-data/
+
+# PUF
+PUF/bin
+PUF/log.txt
+
+.npy
+
